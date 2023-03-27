@@ -17,4 +17,19 @@ Column(
             ],
           ),
 
+
+//placer ou on veut sur l'ecran
+           Positioned(
+            bottom: 10, //place a 10 pixel du bas
+            left: 10, //place a 10 pixel de la gauche
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _ballPositionY += 50;
+                });
+              },
+              child: Text('Bas'),
+            ),
+          ),
+
           

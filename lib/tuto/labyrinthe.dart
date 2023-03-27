@@ -10,45 +10,89 @@ class LabyrinthePage extends StatefulWidget {
 }
 
 class _LabyrintheState extends State<LabyrinthePage> {
-  double _ballPosition = 0.0;
-  double _ballVelocity = 0.0;
-  double _ballAcceleration = 1;
-
-  void _handleTapDown(TapDownDetails details) {
-    setState(() {
-      _ballVelocity = -15.0;
-    });
-  }
-
-  void _handleTapUp(TapUpDetails details) {
-    setState(() {
-      _ballVelocity = 15.0;
-    });
-  }
+  double _ballPositionX = 0.0;
+  double _ballPositionY = 0.0;
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Labyrinthe'),
+        title: const Text("Labyrinthe"),
       ),
-      body: GestureDetector(
-        onTapDown: _handleTapDown,
-        onTapUp: _handleTapUp,
-        child: AnimatedContainer(
-          duration: Duration(milliseconds: 50),
-          child: Icon(Icons.sports_volleyball, size: 50.0, color: Colors.red),
-          width: 50.0,
-          height: 50.0,
-          margin: EdgeInsets.only(top: _ballPosition),
-          onEnd: () {
-            setState(() {
-              _ballVelocity += _ballAcceleration;
-              _ballPosition += _ballVelocity;
-            });
-          },
-        ),
+      body: Stack(
+        children: [
+          AnimatedPositioned(
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            left: _ballPositionX,
+            bottom: _ballPositionY,
+            child: Container(
+              width: 50,
+              height: 50,
+              child: Icon(
+                Icons.sports_volleyball,
+                color: Colors.red,
+                size: 50,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 10,
+            left: 10,
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _ballPositionY -= 30;
+                });
+              },
+              child: Text('Bas'),
+            ),
+          ),
+          Positioned(
+            bottom: 10,
+            left: 100,
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _ballPositionY += 30;
+                });
+              },
+              child: Text('Haut'),
+            ),
+          ),
+          Positioned(
+            bottom: 10,
+            right: 100,
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  if (_ballPositionX > 0) {
+                    _ballPositionX -= 30;
+                  }
+                });
+              },
+              child: Text('Gauche'),
+            ),
+          ),
+          Positioned(
+            bottom: 10,
+            right: 10,
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  if (_ballPositionX < screenWidth - 60) {
+                    _ballPositionX += 30;
+                  }
+                });
+              },
+              child: Text('Droite'),
+            ),
+          ),
+        ],
       ),
     );
   }
