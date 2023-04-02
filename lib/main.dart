@@ -68,7 +68,8 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LabyrinthePage()),
+                  MaterialPageRoute(
+                      builder: (context) => const LabyrinthePage()),
                 );
               },
             ),
