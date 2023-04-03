@@ -1,9 +1,7 @@
 # flutter projet
 
 
-## Getting Started
-
-idées d'applications:
+## idées d'applications:
 
 * quizz capitales.
 * reactivité
