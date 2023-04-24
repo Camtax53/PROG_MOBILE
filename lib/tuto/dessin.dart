@@ -2,24 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 List<bool> endPoint = [];
+double _strokeWidth = 5.0;
 
 class DrawingPainter extends CustomPainter {
-  DrawingPainter(this.points, this.colors);
+  DrawingPainter(this.points, this.colors, this.strokeWidthList);
 
   final List<Offset> points;
   final List<Color> colors;
+  final List<double> strokeWidthList;
 
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
       ..strokeCap = StrokeCap.round
-      ..strokeWidth = 5.0;
+      ..strokeWidth = _strokeWidth;
 
     for (int i = 0; i < points.length - 1; i++) {
       if (points[i] != Offset.zero &&
           points[i + 1] != Offset.zero &&
           !endPoint[i]) {
         paint.color = colors[i];
+        paint.strokeWidth = strokeWidthList[i];
         canvas.drawLine(points[i], points[i + 1], paint);
       }
     }
@@ -39,10 +42,13 @@ class DessinPage extends StatefulWidget {
 class _DessinPageState extends State<DessinPage> {
   List<Offset> _points = <Offset>[];
   List<Color> _colors = <Color>[];
+  List<double> strokeWidthList = [];
 
-  void _addPoint(Offset point) {
+  void _addPoint(Offset point, Color color, double strokeWidth) {
     setState(() {
       _points.add(point);
+      _colors.add(color);
+      strokeWidthList.add(strokeWidth);
     });
     (context.findRenderObject() as RenderObject).markNeedsPaint();
   }
@@ -93,6 +99,48 @@ class _DessinPageState extends State<DessinPage> {
                 );
               },
             ),
+            IconButton(
+              icon: Icon(Icons.brush),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Choisir la taille du crayon'),
+                      content: StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Slider(
+                                value: _strokeWidth,
+                                min: 1.0,
+                                max: 20.0,
+                                divisions: 19,
+                                label: _strokeWidth.round().toString(),
+                                onChanged: (double value) {
+                                  setState(() {
+                                    _strokeWidth = value;
+                                  });
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                      actions: [
+                        FilledButton(
+                          child: const Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            )
           ],
         ),
       ),
@@ -103,29 +151,23 @@ class _DessinPageState extends State<DessinPage> {
             child: GestureDetector(
               //dessine sur l'écran selon les mouvements du doigt
               onPanStart: (details) => setState(() {
-                _addPoint(details.localPosition);
-                _colors.add(_currentColor);
+                _addPoint(details.localPosition, _currentColor, _strokeWidth);
+
                 endPoint.add(false);
               }),
               onPanUpdate: (details) => setState(() {
-                if (firstPoint) {
-                  _addPoint(details.localPosition);
-                  _colors.add(_currentColor);
-                  endPoint.add(false);
-                  firstPoint = false;
-                } else {
-                  _addPoint(details.localPosition);
-                  _colors.add(_currentColor);
-                  endPoint.add(false);
-                }
+                print(_strokeWidth);
+                _addPoint(details.localPosition, _currentColor, _strokeWidth);
+
+                endPoint.add(false);
               }),
               onPanEnd: (details) => setState(() {
-                _addPoint(Offset.zero);
-                _colors.add(_currentColor);
+                _addPoint(Offset.zero, _currentColor, _strokeWidth);
+
                 endPoint.add(true);
               }),
               child: CustomPaint(
-                painter: DrawingPainter(_points, _colors),
+                painter: DrawingPainter(_points, _colors, strokeWidthList),
                 size: Size.infinite,
               ),
             ),
