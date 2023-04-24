@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_1/tuto/quizzTut.dart';
 import 'package:flutter_application_1/tuto/reactivite.dart';
 import 'package:flutter_application_1/tuto/labyrinthe.dart';
+import 'package:flutter_application_1/tuto/dessin.dart';
 
 void main() {
   runApp(const MyApp());
@@ -70,6 +71,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => const LabyrinthePage()),
+                );
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Dessin'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DessinPage()),
                 );
               },
             ),
