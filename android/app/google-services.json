@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "849610687224",
+    "project_id": "progmob-21722",
+    "storage_bucket": "progmob-21722.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849610687224:android:6aafc7aec32e6e9104310d",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849610687224-p4o8e8tesk0sv81oalrgv3etlo1tffmo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-HKZSpF639um6rZCJXPXXhwdAY6T04JI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849610687224-p4o8e8tesk0sv81oalrgv3etlo1tffmo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

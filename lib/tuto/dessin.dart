@@ -176,4 +176,10 @@ class _DessinPageState extends State<DessinPage> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _strokeWidth = 5.0;
+    super.dispose();
+  }
 }

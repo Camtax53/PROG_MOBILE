@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_application_1/tuto/quizzTut.dart';
 import 'package:flutter_application_1/tuto/reactivite.dart';
 import 'package:flutter_application_1/tuto/labyrinthe.dart';
 import 'package:flutter_application_1/tuto/dessin.dart';
+import 'package:flutter_application_1/tuto/memoireMenu.dart';
 
-void main() {
+Future main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -80,6 +84,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => DessinPage()),
+                );
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Memoire'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MemoirePage()),
                 );
               },
             ),
