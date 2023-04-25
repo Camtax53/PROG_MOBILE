@@ -45,9 +45,9 @@ dev_dependencies:
     sdk: flutter
 
   #Firebase Database
-  #cloud_firestore: ^4.5.2  
-  firebase_core: ^1.20.0
-  firebase_auth: ^3.5.0
+  cloud_firestore: ^4.5.2  
+  firebase_core: ^2.10.0
+  firebase_auth: ^4.4.2
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
