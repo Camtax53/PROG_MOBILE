@@ -12,8 +12,8 @@ class _ReacitiviteState extends State<ReactivitePage> {
   int score = 0;
   int activeButton = 0;
   int countdown = 10;
-  int numberOfLines = 10;
-  int numberOfColumns = 10;
+  int numberOfLines = 4;
+  int numberOfColumns = 3;
 
   void handleButtonPress(int buttonIndex) {
     if (buttonIndex == activeButton && countdown > 0) {
@@ -27,6 +27,7 @@ class _ReacitiviteState extends State<ReactivitePage> {
   @override
   void initState() {
     super.initState();
+    activeButton = Random().nextInt(numberOfLines * numberOfColumns);
 
     Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {

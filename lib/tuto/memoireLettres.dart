@@ -59,6 +59,7 @@ class _MemoireLettresPageState extends State<MemoireLettresPage> {
             border: OutlineInputBorder(),
           ),
           controller: _controller,
+          enabled: !isVisible,
           onSubmitted: (value) {
             setState(() {
               inputText = value;
