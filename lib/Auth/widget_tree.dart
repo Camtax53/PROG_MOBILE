@@ -60,6 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
+        automaticallyImplyLeading: false,
         title: const Text('Home Page'),
       ),
       body: Center(
