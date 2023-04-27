@@ -31,7 +31,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: _title(),
-      ),
+        ),
       body: Container(
         height: double.infinity,
         width: double.infinity,
