@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MemoireLettresPage extends StatefulWidget {
   @override
@@ -10,10 +11,13 @@ class MemoireLettresPage extends StatefulWidget {
 
 class _MemoireLettresPageState extends State<MemoireLettresPage> {
   bool isVisible = true;
-  int round = 0;
+  int round = 1;
   String inputText = "";
   String attente = "";
   String randomLetter = "";
+  String recordPerso = "";
+  int time = 3; // Temps restant
+  int remainingHints = 3; // Nombre d'indices restants
   final TextEditingController _controller = TextEditingController();
 
   void addRandomLetter() {
@@ -25,11 +29,74 @@ class _MemoireLettresPageState extends State<MemoireLettresPage> {
     });
   }
 
+  void reset() {
+    setState(() {
+      isVisible = true;
+      round = 1;
+      inputText = "";
+      attente = "";
+      randomLetter = "";
+      remainingHints = 3;
+      addRandomLetter();
+    });
+  }
+
+  User? user;
+  String uid = "";
+  CollectionReference recordCollection =
+      FirebaseFirestore.instance.collection('memoireLettres');
+
+  void addRecord() async {
+    QuerySnapshot snapshotUid =
+        await recordCollection.where('uid', isEqualTo: uid).get();
+    String record = snapshotUid.docs.first.get('score').toString();
+
+    // Si un document existe déjà avec cet UID, mettre à jour le premier document trouvé
+    if (int.parse(record) < round) {
+      recordPerso = (round - 1).toString();
+      await snapshotUid.docs.first.reference.update({
+        'game': 'MemoireLettres',
+        'score': round - 1,
+      });
+    }
+  }
+
+  void setRecord() async {
+    QuerySnapshot snapshotUid =
+        await recordCollection.where('uid', isEqualTo: uid).get();
+    String record = snapshotUid.docs.first.get('score').toString();
+
+    setState(() {
+      if (snapshotUid.docs.isNotEmpty) {
+        recordPerso = record;
+      } else {
+        recordPerso = "0";
+      }
+    });
+  }
+
+  void addNewUserIntoFirestore() async {
+    QuerySnapshot snapshotUid =
+        await recordCollection.where('uid', isEqualTo: uid).get();
+    if (snapshotUid.docs.isEmpty) {
+      await recordCollection.add({
+        'uid': uid,
+        'game': 'MemoireLettres',
+        'score': '0',
+      });
+    }
+    setRecord();
+  }
+
   @override
   void initState() {
     super.initState();
     addRandomLetter();
-    Timer(Duration(seconds: 5), () {
+    user = FirebaseAuth.instance.currentUser;
+    uid = user!.uid;
+    addNewUserIntoFirestore();
+
+    Timer(Duration(seconds: time), () {
       setState(() {
         isVisible = false;
       });
@@ -40,9 +107,13 @@ class _MemoireLettresPageState extends State<MemoireLettresPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurple,
-        title: Text('MemoireNombres'),
-      ),
+          backgroundColor: Colors.deepPurple,
+          title: const Text('MemoireLettres'),
+          actions: <Widget>[
+            const Icon(Icons.emoji_events, color: Colors.white),
+            Text(" $recordPerso", style: TextStyle(color: Colors.white)),
+            const Icon(Icons.star, color: Colors.deepPurple),
+          ]),
       body: Column(children: [
         Text("\n Round $round \n\n", style: TextStyle(fontSize: 24)),
         Visibility(
@@ -51,10 +122,10 @@ class _MemoireLettresPageState extends State<MemoireLettresPage> {
         ),
         Visibility(
           visible: !isVisible,
-          child: Text("$attente", style: TextStyle(fontSize: 24)),
+          child: Text("$attente", style: const TextStyle(fontSize: 24)),
         ),
         TextField(
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Entrez votre texte',
             border: OutlineInputBorder(),
           ),
@@ -64,40 +135,88 @@ class _MemoireLettresPageState extends State<MemoireLettresPage> {
             setState(() {
               inputText = value;
 
-              if (isVisible) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                      title:
-                          Text("Vous devez attendre que le nombre soit caché")),
-                );
-              } else if (inputText == randomLetter && !isVisible) {
-                round++;
+              if (inputText == randomLetter && !isVisible) {
                 isVisible = true;
+                addRecord();
                 addRandomLetter();
-                Timer(Duration(seconds: 5), () {
+                round++;
+                Timer(Duration(seconds: time), () {
                   setState(() {
                     isVisible = false;
                   });
                 });
+                if (round % 5 == 0) {
+                  remainingHints++;
+                }
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Perdu !"),
+                      content: Text("Vous avez perdu la partie."),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          child: Text("OK"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            reset();
+                            Timer(Duration(seconds: time), () {
+                              setState(() {
+                                isVisible = false;
+                              });
+                            });
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
               }
             });
             _controller.clear();
           },
         ),
         ElevatedButton(
-          child: const Icon(Icons.access_time, size: 30),
           onPressed: () {
-            // code à exécuter lorsque l'utilisateur appuie sur le bouton
             setState(() {
-              isVisible = true;
-              Timer(Duration(seconds: 5), () {
-                setState(() {
-                  isVisible = false;
+              if (remainingHints > 0) {
+                isVisible = true;
+                remainingHints--;
+
+                Timer(Duration(seconds: time), () {
+                  setState(() {
+                    isVisible = false;
+                  });
                 });
-              });
+              }
             });
           },
+          child: Stack(
+            children: [
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: const Text('Indice'),
+              ),
+              if (remainingHints > 0)
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      remainingHints.toString(),
+                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ]),
     );

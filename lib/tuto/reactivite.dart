@@ -67,14 +67,15 @@ class _ReacitiviteState extends State<ReactivitePage> {
               crossAxisCount: numberOfColumns,
               shrinkWrap: true,
               children: List.generate(numberOfColumns * numberOfLines, (index) {
-                return FilledButton(
+                return IconButton(
                   onPressed: () => handleButtonPress(index),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      index == activeButton ? Colors.green : Colors.grey,
-                    ),
-                  ),
-                  child: const Text(""),
+                  icon: Icon(
+                      index == activeButton
+                          ? Icons.sports_soccer
+                          : Icons.sports_basketball,
+                      size: 60.0,
+                      color:
+                          index == activeButton ? Colors.black : Colors.orange),
                 );
               }),
             ),

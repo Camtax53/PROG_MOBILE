@@ -65,7 +65,7 @@ class _MemoireNombresPageState extends State<MemoireNombresPage> {
     QuerySnapshot snapshotUid =
         await recordCollection.where('uid', isEqualTo: uid).get();
     String record = snapshotUid.docs.first.get('score').toString();
-    print("pipi ");
+
     setState(() {
       if (snapshotUid.docs.isNotEmpty) {
         recordPerso = record;
