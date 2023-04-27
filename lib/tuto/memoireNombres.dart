@@ -61,7 +61,7 @@ class _MemoireNombresPageState extends State<MemoireNombresPage> {
     }
   }
 
-  void setRecord() async {
+  void getRecord() async {
     QuerySnapshot snapshotUid =
         await recordCollection.where('uid', isEqualTo: uid).get();
     String record = snapshotUid.docs.first.get('score').toString();
@@ -85,7 +85,7 @@ class _MemoireNombresPageState extends State<MemoireNombresPage> {
         'score': '0',
       });
     }
-    setRecord();
+    getRecord();
   }
 
   @override
