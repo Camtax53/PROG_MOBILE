@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
         title: _title(),
-      ),
+        ),
       body: Container(
         height: double.infinity,
         width: double.infinity,
