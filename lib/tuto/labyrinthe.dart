@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
@@ -17,13 +19,14 @@ class _LabyrintheState extends State<LabyrinthePage> {
   double _ballPositionY = 0.0;
 
   double sizeBall = 30.0;
-  double speed = 20.0;
+  double speed = 15;
   bool isVisible = true;
 
   double screenWidth = 0.0;
   double screenHeight = 0.0;
   double appBarHeight = 0.0;
 
+  StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
   //late Offset succes;
 
   @override
@@ -65,31 +68,33 @@ class _LabyrintheState extends State<LabyrinthePage> {
     );
   }
 
-  double x_init = 0.0;
-  double y_init = 0.0;
   @override
   void initState() {
     super.initState();
-    accelerometerEvents.listen((AccelerometerEvent event) {
-      x_init = event.x;
-      y_init = event.y;
-      setState(() {
-        updateBallPosition(event);
-      });
+    _accelerometerSubscription =
+        accelerometerEvents.listen((AccelerometerEvent event) {
+      if (mounted) {
+        setState(() {
+          updateBallPosition(event);
+        });
+      }
     });
   }
 
   void updateBallPosition(AccelerometerEvent event) {
     double y = event.x;
     double x = event.y;
-    if (x > 0.5) {
+    print("x : $x");
+    print("y : $y");
+
+    if (x > 2.5) {
       //droite
       if (_ballPositionX + speed < screenWidth - sizeBall - 20) {
         _ballPositionX += speed;
       } else {
         _ballPositionX = screenWidth - sizeBall - 10;
       }
-    } else if (x < -0.5) {
+    } else if (x < -2.5) {
       //gauche
       if (_ballPositionX - speed > 0) {
         _ballPositionX -= speed;
@@ -98,14 +103,14 @@ class _LabyrintheState extends State<LabyrinthePage> {
       }
     }
 
-    if (y > 0.5) {
+    if (y > 8) {
       //bas
       if (_ballPositionY - speed > sizeBall / 4) {
         _ballPositionY -= speed;
       } else {
         _ballPositionY = 0 - sizeBall / 4;
       }
-    } else if (y < -0.5) {
+    } else if (y < 6) {
       //haut
       if (_ballPositionY + speed <
           screenHeight - appBarHeight - sizeBall - 20) {
@@ -114,19 +119,19 @@ class _LabyrintheState extends State<LabyrinthePage> {
         _ballPositionY = screenHeight - appBarHeight - sizeBall - 10;
       }
     }
-    if (x > 0.5 && y > 0.5) {
+    if (x > 2.5 && y > 8) {
       // diagonale bas droite
       _ballPositionX -= 2.5;
       _ballPositionY -= 2.5;
-    } else if (x < -0.5 && y > 0.5) {
+    } else if (x < -2.5 && y > 8) {
       // diagonale haut droite
       _ballPositionX -= 2.5;
       _ballPositionY += 2.5;
-    } else if (x > 0.5 && y < -0.5) {
+    } else if (x > 2.5 && y < 6) {
       // diagonale bas gauche
       _ballPositionX += 2.5;
       _ballPositionY -= 2.5;
-    } else if (x < -0.5 && y < -0.5) {
+    } else if (x < -2.5 && y < 6) {
       // diagonale haut gauche
       _ballPositionX += 2.5;
       _ballPositionY += 2.5;
@@ -139,6 +144,7 @@ class _LabyrintheState extends State<LabyrinthePage> {
   @override
   void dispose() {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    _accelerometerSubscription?.cancel();
     super.dispose();
   }
 }
