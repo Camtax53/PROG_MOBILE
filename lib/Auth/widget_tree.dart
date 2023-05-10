@@ -8,6 +8,7 @@ import 'package:flutter_application_1/tuto/reactivite.dart';
 import 'package:flutter_application_1/tuto/labyrinthe.dart';
 import 'package:flutter_application_1/tuto/dessin.dart';
 import 'package:flutter_application_1/tuto/memoireMenu.dart';
+import 'package:flutter_application_1/tuto/pompes.dart';
 
 class WidgetTree extends StatefulWidget {
   const WidgetTree({Key? key}) : super(key: key);
@@ -92,6 +93,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => const LabyrinthePage()),
+                );
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Pompes'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PompesPage()),
                 );
               },
             ),

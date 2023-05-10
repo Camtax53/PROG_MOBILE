@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_application_1/Auth/auth.dart';
 
 class ReactivitePage extends StatefulWidget {
   const ReactivitePage({super.key});
@@ -40,8 +41,6 @@ class _ReacitiviteState extends State<ReactivitePage> {
       if (snapshotGame.docs.isNotEmpty) {
         String record = snapshotGame.docs.first.get('score').toString();
         recordPersoMap[cle] = record;
-        print(recordPersoMap[cle]);
-        print("caca");
       } else {
         recordPersoMap[cle] = "0";
       }
@@ -74,6 +73,7 @@ class _ReacitiviteState extends State<ReactivitePage> {
   void initState() {
     super.initState();
     uid = FirebaseAuth.instance.currentUser!.uid;
+
     addNewUserIntoFirestore();
   }
 
