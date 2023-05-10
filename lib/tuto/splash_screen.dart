@@ -33,7 +33,7 @@ void _playVideo() async{
  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => WidgetTree()),
+                        builder: (context) =>  WidgetTree()),
                   );
 }
 
