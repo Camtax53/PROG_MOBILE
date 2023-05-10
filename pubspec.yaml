@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   sensors_plus: ^2.0.2
+  proximity_sensor: ^1.0.4
   flutter_colorpicker: ^1.0.3
   
   # The following adds the Cupertino Icons font to your application.

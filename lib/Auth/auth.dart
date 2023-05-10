@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/tuto/reactivite.dart';
 
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -10,13 +12,13 @@ class Auth {
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     await _firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password);
+        email: email.trim(), password: password);
   }
 
   Future<void> createUserWithEmailAndPassword(
       String email, String password) async {
     await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email, password: password);
+        email: email.trim(), password: password);
   }
 
   Future<void> signOut() async {
