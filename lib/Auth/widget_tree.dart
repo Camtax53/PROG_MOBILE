@@ -51,6 +51,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _signOutButton() {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.orange[200],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        minimumSize: const Size(250, 40),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      ),
       onPressed: signOut,
       child: const Text('Sign Out'),
     );
@@ -59,44 +68,102 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.deepPurple,
-        automaticallyImplyLeading: false,
-        title: const Text('Home Page'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              child: const Text('Quizz Capitales'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => QuizzPage()),
-                );
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Reactivité'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ReactivitePage()),
-                );
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Labyrinthe'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const LabyrinthePage()),
-                );
-              },
-            ),
-            ElevatedButton(
+      body: Stack(
+        children:[
+         Image.asset(
+            "assets/f1dessin.jpg",
+            fit: BoxFit.cover,
+            height: double.infinity,
+            width: double.infinity,
+          ),
+          Align(
+        alignment: Alignment.center,
+        child: Container(
+          height: 350,
+          width: 270,
+          decoration: BoxDecoration(
+            color: Colors.brown.withOpacity(0.4),
+            borderRadius: BorderRadius.vertical(
+                top: Radius.circular(30), 
+                bottom: Radius.circular(30)),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.orange[200],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  minimumSize: const Size(250, 40),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                ),
+                child: const Text('Quizz Capitales'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => QuizzPage()),
+                  );
+                },
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.orange[200],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  minimumSize: const Size(250, 40),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                ),
+                child: const Text('Reactivité'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ReactivitePage()),
+                  );
+                },
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.orange[200],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  minimumSize: const Size(250, 40),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                ),
+                child: const Text('Labyrinthe'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LabyrinthePage()),
+                  );
+                },
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.orange[200],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  minimumSize: const Size(250, 40),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                ),
+                child: const Text('Dessin'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DessinPage()),
+                  );
+                },
+              ),
+              ElevatedButton(
               child: const Text('Pompes'),
               onPressed: () {
                 Navigator.push(
@@ -105,28 +172,32 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
-            ElevatedButton(
-              child: const Text('Dessin'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => DessinPage()),
-                );
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Memoire'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MemoirePage()),
-                );
-              },
-            ),
-            _signOutButton(),
-          ],
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.orange[200],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  minimumSize: const Size(250, 40),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                ),
+                child: const Text('Memoire'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MemoirePage()),
+                  );
+                },
+              ),
+              _signOutButton(),
+            ],
+          ),
         ),
-      ),
+      
+    )
+    ]
+    ),
     );
   }
 }
