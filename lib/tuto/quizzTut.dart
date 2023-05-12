@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../Auth/widget_Tree.dart';
 
-late List<Map<String, String>> countriesAndCapitals ;
+late List<Map<String, String>> countriesAndCapitals;
 
 class QuizzPage extends StatefulWidget {
   @override
@@ -36,52 +36,55 @@ class _QuizzPageState extends State<QuizzPage> {
   void initState() {
     super.initState();
     countriesAndCapitals = [
-  {'1': 'Paris'},
-  {'2': 'Berlin'},
-  {'3': 'London'},
-  {'4': 'Washington'},
-  {'5': 'Moscow'},
-  {'6': 'Tokyo'},
-  {'7': 'Beijing'},
-  {'8': 'Rome'},
-  {'9': 'Canberra'},
-  {'10': 'Pretoria'},
-];
+      {'1': 'Paris'},
+      {'2': 'Berlin'},
+      {'3': 'London'},
+      {'4': 'Washington'},
+      {'5': 'Moscow'},
+      {'6': 'Tokyo'},
+      {'7': 'Beijing'},
+      {'8': 'Rome'},
+      {'9': 'Canberra'},
+      {'10': 'Pretoria'},
+    ];
     countriesAndCapitals.shuffle();
   }
 
   void _showEndGameDialog(BuildContext context) {
     showDialog(
-  context: context,
-  builder: (BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // Retourner false pour empêcher la fermeture de la boîte de dialogue lors de l'appui sur le bouton Retour physique
-        return false;
-      },
-      child: AlertDialog(
-        title: Text("Retour à l'accueil"),
-        content: Text("Êtes-vous sûr de vouloir retourner à l'accueil ?"),
-        actions: [
-          TextButton(
-            child: Text('Retour à l\'accueil'),
-            onPressed: () {
-              // Ferme la boîte de dialogue et retourne à la page précédente
-              Navigator.pop(context);
-            },
+      context: context,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async {
+            // Retourner false pour empêcher la fermeture de la boîte de dialogue lors de l'appui sur le bouton Retour physique
+            return false;
+          },
+          child: AlertDialog(
+            title: Text("Retour à l'accueil"),
+            content: Text("Êtes-vous sûr de vouloir retourner à l'accueil ?"),
+            actions: [
+              TextButton(
+                child: Text('Retour à l\'accueil'),
+                onPressed: () {
+                  // Ferme la boîte de dialogue et retourne à la page précédente
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => WidgetTree()),
+                    (Route<dynamic> route) =>
+                        false, // Cette fonction empêche la navigation en arrière
+                  );
+                },
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
-  },
-);
-
   }
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
