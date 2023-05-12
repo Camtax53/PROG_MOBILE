@@ -45,159 +45,252 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Future<void> signOut() async {
-    await Auth().signOut();
+  double _buttonPosition = 0.0;
+
+  Future<void> signOut(BuildContext context) async {
+    bool confirm = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Color(0xFFFAF0D5),
+          title: const Text(
+            "Êtes-vous sûr de vouloir vous déconnecter?",
+            style: TextStyle(
+              color: Color(
+                  0xFF09B198), // remplacez par votre couleur personnalisée
+              fontSize:
+                  20, // remplacez par votre taille de police personnalisée
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: const Text(
+                "Annuler",
+                style: TextStyle(
+                  color:
+                      Colors.black, // remplacez par votre couleur personnalisée
+                  fontSize:
+                      20, // remplacez par votre taille de police personnalisée
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "Déconnexion",
+                style: TextStyle(
+                  color:
+                      Colors.black, // remplacez par votre couleur personnalisée
+                  fontSize:
+                      20, // remplacez par votre taille de police personnalisée
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+    if (confirm == true) {
+      await Auth().signOut();
+    }
   }
 
-  Widget _signOutButton() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  backgroundColor: Colors.orange[200],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        minimumSize: const Size(250, 40),
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      ),
-      onPressed: signOut,
-      child: const Text('Sign Out'),
-    );
+  void _onVerticalDragUpdate(DragUpdateDetails details) {
+    setState(() {
+      _buttonPosition += details.delta.dy;
+      if (_buttonPosition < 0) {
+        _buttonPosition = 0;
+      } else if (_buttonPosition > 200) {
+        _buttonPosition = 200;
+      }
+    });
   }
+
+  // Widget _signOutButton() {
+  //   return ElevatedButton(
+  //     style: ElevatedButton.styleFrom(
+  //       foregroundColor: Colors.white,
+  //       backgroundColor: Colors.blueGrey,
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(10),
+  //       ),
+  //       minimumSize: const Size(200, 40),
+  //       padding: const EdgeInsets.symmetric(horizontal: 16.0),
+  //     ),
+  //     onPressed: signOut(context),
+  //     child: const Text('Sign Out'),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children:[
-         Image.asset(
-            "assets/f1dessin.jpg",
-            fit: BoxFit.cover,
-            height: double.infinity,
-            width: double.infinity,
-          ),
-          Align(
-        alignment: Alignment.center,
-        child: Container(
-          height: 350,
-          width: 270,
-          decoration: BoxDecoration(
-            color: Colors.brown.withOpacity(0.4),
-            borderRadius: BorderRadius.vertical(
-                top: Radius.circular(30), 
-                bottom: Radius.circular(30)),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  backgroundColor: Colors.orange[200],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  minimumSize: const Size(250, 40),
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                ),
-                child: const Text('Quizz Capitales'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => QuizzPage()),
-                  );
-                },
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 20),
+            child: Container(
+              height: 35,
+              width: 35,
+              decoration: BoxDecoration(
+                color: Color(0xFF09B198),
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(5),
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  backgroundColor: Colors.orange[200],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  minimumSize: const Size(250, 40),
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                ),
-                child: const Text('Reactivité'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ReactivitePage()),
-                  );
-                },
+              child: Icon(
+                Icons.logout,
+                color: Colors.white,
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  backgroundColor: Colors.orange[200],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  minimumSize: const Size(250, 40),
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                ),
-                child: const Text('Labyrinthe'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const LabyrinthePage()),
-                  );
-                },
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  backgroundColor: Colors.orange[200],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  minimumSize: const Size(250, 40),
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                ),
-                child: const Text('Dessin'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DessinPage()),
-                  );
-                },
-              ),
-              ElevatedButton(
-              child: const Text('Pompes'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const PompesPage()),
-                );
-              },
             ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  backgroundColor: Colors.orange[200],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  minimumSize: const Size(250, 40),
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                ),
-                child: const Text('Memoire'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MemoirePage()),
-                  );
-                },
-              ),
-              _signOutButton(),
-            ],
           ),
+        ],
+      ),
+      body: Stack(children: [
+        Image.asset(
+          "assets/fondecran.jpg",
+          fit: BoxFit.cover,
+          height: double.infinity,
+          width: double.infinity,
         ),
-      
-    )
-    ]
-    ),
+        Align(
+          alignment: Alignment.center,
+          child: Container(
+            height: 290,
+            width: 230,
+            decoration: BoxDecoration(
+              color: Colors.blueGrey.withOpacity(0.2),
+              borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(10), bottom: Radius.circular(10)),
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF09B198),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      minimumSize: const Size(200, 40),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    ),
+                    child: const Text('Quizz'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => QuizzPage()),
+                      );
+                    },
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF09B198),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      minimumSize: const Size(200, 40),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    ),
+                    child: const Text('Reactivité'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ReactivitePage()),
+                      );
+                    },
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF09B198),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      minimumSize: const Size(200, 40),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    ),
+                    child: const Text('Labyrinthe'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LabyrinthePage()),
+                      );
+                    },
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF09B198),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      minimumSize: const Size(200, 40),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    ),
+                    child: const Text('Dessin'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => DessinPage()),
+                      );
+                    },
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF09B198),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      minimumSize: const Size(200, 40),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    ),
+                    child: const Text('Pompes'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PompesPage()),
+                      );
+                    },
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF09B198),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      minimumSize: const Size(200, 40),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    ),
+                    child: const Text('Memoire'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MemoirePage()),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        )
+      ]),
     );
   }
 }
