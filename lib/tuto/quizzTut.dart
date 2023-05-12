@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/tuto/solo_game.dart';
 
 import '../Auth/widget_Tree.dart';
 
@@ -70,7 +71,7 @@ class _QuizzPageState extends State<QuizzPage> {
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => WidgetTree()),
+                        builder: (BuildContext context) => SoloGame()),
                     (Route<dynamic> route) =>
                         false, // Cette fonction empêche la navigation en arrière
                   );

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Auth/auth.dart';
 import 'package:flutter_application_1/Auth/home_page.dart';
@@ -10,48 +11,19 @@ import 'package:flutter_application_1/tuto/dessin.dart';
 import 'package:flutter_application_1/tuto/memoireMenu.dart';
 import 'package:flutter_application_1/tuto/pompes.dart';
 
-import '../tuto/multi_game.dart';
-import '../tuto/solo_game.dart';
 
-class WidgetTree extends StatefulWidget {
-  const WidgetTree({Key? key}) : super(key: key);
 
-  @override
-  _WidgetTreeState createState() => _WidgetTreeState();
+
+class SoloGame extends StatefulWidget {
+  const SoloGame({Key? key}) : super(key: key);
+ 
+   @override
+  _SoloGameState createState() => _SoloGameState();
 }
 
-class _WidgetTreeState extends State<WidgetTree> {
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: Auth().authStateChanges,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return MyHomePage( //on est connecte donc on va sur myhomepage
-            title: 'Games',
-          );
-        } else {
-          return const LoginPage(); //si pas connecté va sur la login page
-        
-        }
-      },
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
+class _SoloGameState extends State<SoloGame> {
   double _buttonPosition = 0.0;
-
-  Future<void> signOut(BuildContext context) async {
+Future<void> signOut(BuildContext context) async {
     bool confirm = await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -104,34 +76,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  // void _onVerticalDragUpdate(DragUpdateDetails details) {
-  //   setState(() {
-  //     _buttonPosition += details.delta.dy;
-  //     if (_buttonPosition < 0) {
-  //       _buttonPosition = 0;
-  //     } else if (_buttonPosition > 200) {
-  //       _buttonPosition = 200;
-  //     }
-  //   });
-  // }
 
-  // Widget _signOutButton() {
-  //   return ElevatedButton(
-  //     style: ElevatedButton.styleFrom(
-  //       foregroundColor: Colors.white,
-  //       backgroundColor: Colors.blueGrey,
-  //       shape: RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.circular(10),
-  //       ),
-  //       minimumSize: const Size(200, 40),
-  //       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-  //     ),
-  //     onPressed: signOut(context),
-  //     child: const Text('Sign Out'),
-  //   );
-  // }
-
-  @override
+@override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -170,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Align(
           alignment: Alignment.center,
           child: Container(
-            height: 100,
+            height: 290,
             width: 230,
             decoration: BoxDecoration(
               color: Colors.blueGrey.withOpacity(0.2),
@@ -181,8 +127,6 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  
-
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
@@ -193,16 +137,33 @@ class _MyHomePageState extends State<MyHomePage> {
                       minimumSize: const Size(200, 40),
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     ),
-                    child: const Text('Multijoueur'),
+                    child: const Text('Quizz'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => QuizzPage()),
+                      );
+                    },
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF09B198),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      minimumSize: const Size(200, 40),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    ),
+                    child: const Text('Reactivité'),
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => MultiGame()),
+                            builder: (context) => ReactivitePage()),
                       );
                     },
                   ),
-                  
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
@@ -213,11 +174,67 @@ class _MyHomePageState extends State<MyHomePage> {
                       minimumSize: const Size(200, 40),
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     ),
-                    child: const Text('Solo'),
+                    child: const Text('Labyrinthe'),
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SoloGame()),
+                        MaterialPageRoute(
+                            builder: (context) => const LabyrinthePage()),
+                      );
+                    },
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF09B198),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      minimumSize: const Size(200, 40),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    ),
+                    child: const Text('Dessin'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => DessinPage()),
+                      );
+                    },
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF09B198),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      minimumSize: const Size(200, 40),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    ),
+                    child: const Text('Pompes'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PompesPage()),
+                      );
+                    },
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF09B198),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      minimumSize: const Size(200, 40),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    ),
+                    child: const Text('Memoire'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MemoirePage()),
                       );
                     },
                   ),
