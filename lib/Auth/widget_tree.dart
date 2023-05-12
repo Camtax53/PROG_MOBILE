@@ -145,9 +145,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(5),
               ),
-              child: Icon(
-                Icons.logout,
+              child: IconButton(
+                icon: const Icon(Icons.logout),
                 color: Colors.white,
+                onPressed: () {
+                  signOut(context);
+                },
               ),
             ),
           ),
