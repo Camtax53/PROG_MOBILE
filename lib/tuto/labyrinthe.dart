@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
@@ -13,132 +15,256 @@ class LabyrinthePage extends StatefulWidget {
 }
 
 class _LabyrintheState extends State<LabyrinthePage> {
-  double _ballPositionX = 0.0;
-  double _ballPositionY = 0.0;
+  Offset _ballPosition = Offset(0.0, 0.0);
+  late Offset successPosition;
 
   double sizeBall = 30.0;
   double speed = 20.0;
+  late double speedDiag;
   bool isVisible = true;
+  int counter = 0;
+  bool isGameOver = false;
 
   double screenWidth = 0.0;
   double screenHeight = 0.0;
   double appBarHeight = 0.0;
 
-  //late Offset succes;
+  StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
 
   @override
   Widget build(BuildContext context) {
-    if (_ballPositionX == 0.0 || _ballPositionY == 0.0) {
-      _ballPositionX = 40;
-      _ballPositionY = screenHeight / 4;
-    }
-
-    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
-
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     appBarHeight =
         AppBar().preferredSize.height + MediaQuery.of(context).padding.top;
 
+    if (_ballPosition == Offset(0.0, 0.0)) {
+      _ballPosition = Offset(MediaQuery.of(context).size.width - 350,
+          screenHeight / 2 - appBarHeight / 2);
+    }
+    successPosition = Offset(MediaQuery.of(context).size.width - 90,
+        screenHeight / 2 - appBarHeight / 2);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
+
+    if (isGameOver) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Game Over'),
+            content: const Text('Vous avez perdu !'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // Remettre la balle à la position initiale et réinitialiser le compteur
+                  setState(() {
+                    _ballPosition = Offset(
+                        MediaQuery.of(context).size.width - 350,
+                        screenHeight / 2 - appBarHeight / 2);
+                    counter = 0;
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.secondary,
         title: const Text("Labyrinthe"),
+        actions: [
+          Text(counter.toString()),
+        ],
       ),
-      body: Stack(children: [
-        AnimatedPositioned(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          left: _ballPositionX,
-          bottom: _ballPositionY,
-          child: Container(
-            width: 50,
-            height: 50,
-            child: Icon(
-              Icons.sports_volleyball,
-              color: Colors.red,
-              size: sizeBall,
-            ),
+      body: Stack(
+        children: [
+          Positioned(
+            bottom: successPosition.dy,
+            left: successPosition.dx,
+            child:
+                const Icon(Icons.circle_sharp, color: Colors.green, size: 50),
           ),
-        ),
-      ]),
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            left: _ballPosition.dx,
+            bottom: _ballPosition.dy,
+            child: isVisible
+                ? Container(
+                    width: 50,
+                    height: 50,
+                    child: Icon(
+                      Icons.sports_volleyball,
+                      color: Colors.red,
+                      size: sizeBall,
+                    ),
+                  )
+                : Container(), // Cacher la balle
+          ),
+          if (counter <= obstacle.length)
+            ...List.generate(
+              counter,
+              (index) => Positioned(
+                left: obstacle[index].dx,
+                top: obstacle[index].dy,
+                child: const Icon(Icons.circle, color: Colors.red, size: 50),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
-  double x_init = 0.0;
-  double y_init = 0.0;
   @override
   void initState() {
     super.initState();
-    accelerometerEvents.listen((AccelerometerEvent event) {
-      x_init = event.x;
-      y_init = event.y;
-      setState(() {
-        updateBallPosition(event);
-      });
+    obstacle = [
+      Offset(300, 200),
+      Offset(400, 50),
+    ];
+    _accelerometerSubscription =
+        accelerometerEvents.listen((AccelerometerEvent event) {
+      if (mounted) {
+        setState(() {
+          updateBallPosition(event);
+        });
+      }
     });
   }
 
   void updateBallPosition(AccelerometerEvent event) {
+    speedDiag = speed / sqrt(2);
     double y = event.x;
     double x = event.y;
-    if (x > 0.5) {
+    // print("x : $x");
+    // print("y : $y");
+
+    if (!isVisible) {
+      _ballPosition = Offset(40, screenHeight / 4);
+      Timer(const Duration(milliseconds: 500), () {
+        isVisible = true;
+      });
+    }
+
+    if (x > 2.5) {
       //droite
-      if (_ballPositionX + speed < screenWidth - sizeBall - 20) {
-        _ballPositionX += speed;
+      if (_ballPosition.dx + speed < screenWidth - sizeBall - 20) {
+        _ballPosition = Offset(_ballPosition.dx + speed, _ballPosition.dy);
       } else {
-        _ballPositionX = screenWidth - sizeBall - 10;
+        _ballPosition = Offset(screenWidth - sizeBall - 10, _ballPosition.dy);
       }
-    } else if (x < -0.5) {
+    } else if (x < -2.5) {
       //gauche
-      if (_ballPositionX - speed > 0) {
-        _ballPositionX -= speed;
+      if (_ballPosition.dx - speed > 0) {
+        _ballPosition = Offset(_ballPosition.dx - speed, _ballPosition.dy);
       } else {
-        _ballPositionX = 0 - sizeBall / 4;
+        _ballPosition = Offset(0 - sizeBall / 4, _ballPosition.dy);
       }
     }
 
-    if (y > 0.5) {
+    if (y > 8) {
       //bas
-      if (_ballPositionY - speed > sizeBall / 4) {
-        _ballPositionY -= speed;
+      if (_ballPosition.dy - speed > sizeBall / 4) {
+        _ballPosition = Offset(_ballPosition.dx, _ballPosition.dy - speed);
       } else {
-        _ballPositionY = 0 - sizeBall / 4;
+        _ballPosition = Offset(_ballPosition.dx, 0 - sizeBall / 4);
       }
-    } else if (y < -0.5) {
+    } else if (y < 6) {
       //haut
-      if (_ballPositionY + speed <
+      if (_ballPosition.dy + speed <
           screenHeight - appBarHeight - sizeBall - 20) {
-        _ballPositionY += speed;
+        _ballPosition = Offset(_ballPosition.dx, _ballPosition.dy + speed);
       } else {
-        _ballPositionY = screenHeight - appBarHeight - sizeBall - 10;
+        _ballPosition = Offset(
+            _ballPosition.dx, screenHeight - appBarHeight - sizeBall - 10);
       }
-    }
-    if (x > 0.5 && y > 0.5) {
-      // diagonale bas droite
-      _ballPositionX -= 2.5;
-      _ballPositionY -= 2.5;
-    } else if (x < -0.5 && y > 0.5) {
-      // diagonale haut droite
-      _ballPositionX -= 2.5;
-      _ballPositionY += 2.5;
-    } else if (x > 0.5 && y < -0.5) {
-      // diagonale bas gauche
-      _ballPositionX += 2.5;
-      _ballPositionY -= 2.5;
-    } else if (x < -0.5 && y < -0.5) {
-      // diagonale haut gauche
-      _ballPositionX += 2.5;
-      _ballPositionY += 2.5;
     }
 
-    // _ballPositionX = _ballPositionX.clamp(0, screenWidth - 50);
-    // _ballPositionY = _ballPositionY.clamp(0, screenHeight - 50);
+    // Diagonales
+    if (x > 2.5 && y > 8) {
+      // Droite bas
+      if (_ballPosition.dx + speedDiag < screenWidth - sizeBall - 20 &&
+          _ballPosition.dy - speedDiag > sizeBall / 4) {
+        _ballPosition =
+            Offset(_ballPosition.dx + speedDiag, _ballPosition.dy - speedDiag);
+      } else if (_ballPosition.dx + speedDiag >= screenWidth - sizeBall - 20 &&
+          _ballPosition.dy - speedDiag <= sizeBall / 4) {
+        _ballPosition = Offset(screenWidth - sizeBall - 10, 0 - sizeBall / 4);
+      } else if (_ballPosition.dx + speedDiag >= screenWidth - sizeBall - 20) {
+        _ballPosition =
+            Offset(screenWidth - sizeBall - 10, _ballPosition.dy - speedDiag);
+      } else {
+        _ballPosition = Offset(_ballPosition.dx + speedDiag, 0 - sizeBall / 4);
+      }
+    } else if (x > 2.5 && y < 6) {
+      // Droite haut
+      if (_ballPosition.dx + speedDiag < screenWidth - sizeBall - 20 &&
+          _ballPosition.dy + speedDiag <
+              screenHeight - appBarHeight - sizeBall - 20) {
+        _ballPosition =
+            Offset(_ballPosition.dx + speedDiag, _ballPosition.dy + speedDiag);
+      } else if (_ballPosition.dx + speedDiag >= screenWidth - sizeBall - 20 &&
+          _ballPosition.dy + speedDiag >=
+              screenHeight - appBarHeight - sizeBall - 20) {
+        _ballPosition = Offset(screenWidth - sizeBall - 10,
+            screenHeight - appBarHeight - sizeBall - 10);
+      } else if (_ballPosition.dx + speedDiag >= screenWidth - sizeBall - 20) {
+        _ballPosition =
+            Offset(screenWidth - sizeBall - 10, _ballPosition.dy + speedDiag);
+      } else {
+        _ballPosition = Offset(_ballPosition.dx + speedDiag,
+            screenHeight - appBarHeight - sizeBall - 10);
+      }
+    } else if (x < -2.5 && y > 8) {
+      // Gauche bas
+      if (_ballPosition.dx - speedDiag > 0 &&
+          _ballPosition.dy - speedDiag > sizeBall / 4) {
+        _ballPosition =
+            Offset(_ballPosition.dx - speedDiag, _ballPosition.dy - speedDiag);
+      } else if (_ballPosition.dx - speedDiag <= 0 &&
+          _ballPosition.dy - speedDiag <= sizeBall / 4) {
+        _ballPosition = Offset(0 - sizeBall / 4, 0 - sizeBall / 4);
+      } else if (_ballPosition.dx - speedDiag <= 0) {
+        _ballPosition = Offset(0 - sizeBall / 4, _ballPosition.dy - speedDiag);
+      } else {
+        _ballPosition = Offset(_ballPosition.dx - speedDiag, 0 - sizeBall / 4);
+      }
+    } else if (x < -2.5 && y < 6) {
+      // Gauche haut
+      if (_ballPosition.dx - speedDiag > 0 &&
+          _ballPosition.dy + speedDiag <
+              screenHeight - appBarHeight - sizeBall - 20) {
+        _ballPosition =
+            Offset(_ballPosition.dx - speedDiag, _ballPosition.dy + speedDiag);
+      } else if (_ballPosition.dx - speedDiag <= 0 &&
+          _ballPosition.dy + speedDiag >=
+              screenHeight - appBarHeight - sizeBall - 20) {
+        _ballPosition = Offset(
+            0 - sizeBall / 4, screenHeight - appBarHeight - sizeBall - 10);
+      } else if (_ballPosition.dx - speedDiag <= 0) {
+        _ballPosition = Offset(0 - sizeBall / 4, _ballPosition.dy + speedDiag);
+      } else {
+        _ballPosition = Offset(_ballPosition.dx - speedDiag,
+            screenHeight - appBarHeight - sizeBall - 10);
+      }
+    }
+
+    if ((successPosition.dx - _ballPosition.dx).abs().round() <= sizeBall / 2 &&
+        (successPosition.dy - _ballPosition.dy).abs().round() <= sizeBall / 2) {
+      counter++;
+      isVisible = false;
+    }
   }
 
   @override
   void dispose() {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    _accelerometerSubscription?.cancel();
     super.dispose();
   }
 }
