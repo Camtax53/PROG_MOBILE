@@ -59,8 +59,9 @@ class _DessinPageState extends State<DessinPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Color(0xFF09B198),
         title: const Text('Dessin '),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -78,6 +79,7 @@ class _DessinPageState extends State<DessinPage> {
             ),
             IconButton(
               icon: Icon(Icons.color_lens),
+              color: _currentColor != Colors.white ? _currentColor : Colors.black,
               onPressed: () {
                 showDialog(
                   context: context,
@@ -94,9 +96,26 @@ class _DessinPageState extends State<DessinPage> {
                           },
                         ),
                       ),
+                      actions: [
+                        FilledButton(
+                          child: const Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
                     );
                   },
                 );
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.fluorescent_rounded),
+              onPressed: () {
+                setState(() {
+                  _currentColor = Colors
+                      .white; // Remplacez "_brushColor" par la variable qui contient la couleur de votre pinceau
+                });
               },
             ),
             IconButton(

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Auth/auth.dart';
 import 'package:flutter_application_1/Auth/home_page.dart';
@@ -11,19 +10,16 @@ import 'package:flutter_application_1/tuto/dessin.dart';
 import 'package:flutter_application_1/tuto/memoireMenu.dart';
 import 'package:flutter_application_1/tuto/pompes.dart';
 
-
-
-
 class SoloGame extends StatefulWidget {
   const SoloGame({Key? key}) : super(key: key);
- 
-   @override
+
+  @override
   _SoloGameState createState() => _SoloGameState();
 }
 
 class _SoloGameState extends State<SoloGame> {
   double _buttonPosition = 0.0;
-Future<void> signOut(BuildContext context) async {
+  Future<void> signOut(BuildContext context) async {
     bool confirm = await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -76,8 +72,7 @@ Future<void> signOut(BuildContext context) async {
     }
   }
 
-
-@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -116,28 +111,66 @@ Future<void> signOut(BuildContext context) async {
         Align(
           alignment: Alignment.center,
           child: Container(
-            height: 290,
+            height: 325,
             width: 230,
             decoration: BoxDecoration(
               color: Colors.blueGrey.withOpacity(0.2),
-              borderRadius: BorderRadius.vertical(
+              borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(10), bottom: Radius.circular(10)),
             ),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  const SizedBox(height: 5),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Color(0xFF09B198),
+                      minimumSize: Size(100, 30),
+                      maximumSize: Size(220, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      minimumSize: const Size(200, 40),
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: const EdgeInsets.only(right: 00, left: 5),
                     ),
-                    child: const Text('Quizz'),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Quizz sur l\'athlétisme'),
+                        IconButton(
+                          icon: const Icon(Icons.info_outline),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor: Color(0xFFFAF0D5),
+                                  content: const Text(
+                                      'Ce quizz va tester tes connaissances en matière d\'athlétisme. Répond à cinq questions au hasard et obtient le meilleur score.'),
+                                  actions: [
+                                    TextButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: Color(0xFF09B198),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Ok'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -145,17 +178,55 @@ Future<void> signOut(BuildContext context) async {
                       );
                     },
                   ),
+                  const SizedBox(height: 5),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Color(0xFF09B198),
+                      minimumSize: Size(100, 30),
+                      maximumSize: Size(220, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      minimumSize: const Size(200, 40),
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: const EdgeInsets.only(right: 0, left: 10),
                     ),
-                    child: const Text('Reactivité'),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Reactivité'),
+                        IconButton(
+                          icon: const Icon(Icons.info_outline),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor: Color(0xFFFAF0D5),
+                                  content: const Text(
+                                      'Comme lors de l\'entrainemnt des pilotes automobiles ce jeu permet de tester ta réactivité. Il faut cliquer le plus rapidement possible sur les boutons verts qui vont s\'afficher dans le temps imparti.'),
+                                  actions: [
+                                    TextButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: Color(0xFF09B198),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Ok'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -164,77 +235,231 @@ Future<void> signOut(BuildContext context) async {
                       );
                     },
                   ),
+                  const SizedBox(height: 5),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Color(0xFF09B198),
+                      minimumSize: Size(100, 30),
+                      maximumSize: Size(220, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      minimumSize: const Size(200, 40),
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: const EdgeInsets.only(right: 0, left: 10),
                     ),
-                    child: const Text('Labyrinthe'),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Golf'),
+                        IconButton(
+                          icon: const Icon(Icons.info_outline),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor: Color(0xFFFAF0D5),
+                                  content: const Text(
+                                      'Utilise le positionnement de ton téléphone pour faire avancer la balle de golf jusqu\'au trou vert. Evite les trous rouge qui te feront perdre !'),
+                                  actions: [
+                                    TextButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: Color(0xFF09B198),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Ok'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const LabyrinthePage()),
+                            builder: (context) => LabyrinthePage()),
                       );
                     },
                   ),
+                  const SizedBox(height: 5),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Color(0xFF09B198),
+                      minimumSize: Size(100, 30),
+                      maximumSize: Size(220, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      minimumSize: const Size(200, 40),
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: const EdgeInsets.only(right: 0, left: 10),
                     ),
-                    child: const Text('Dessin'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => DessinPage()),
-                      );
-                    },
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Color(0xFF09B198),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      minimumSize: const Size(200, 40),
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Dessin'),
+                        IconButton(
+                          icon: const Icon(Icons.info_outline),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor: Color(0xFFFAF0D5),
+                                  content: const Text(
+                                      'Bienvenue sur une feuille de dessin. Laisse libre court à ton imagination. Tu pourras tout effacer, changer la taille et la couleur de ton pinceau ou utiliser la gomme. Amuse toi bien.'),
+                                  actions: [
+                                    TextButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: Color(0xFF09B198),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Ok'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                    child: const Text('Pompes'),
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const PompesPage()),
+                            builder: (context) => DessinPage()),
                       );
                     },
                   ),
+                  const SizedBox(height: 5),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Color(0xFF09B198),
+                      minimumSize: Size(100, 30),
+                      maximumSize: Size(220, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      minimumSize: const Size(200, 40),
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: const EdgeInsets.only(right: 0, left: 10),
                     ),
-                    child: const Text('Memoire'),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Pompes'),
+                        IconButton(
+                          icon: const Icon(Icons.info_outline),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor: Color(0xFFFAF0D5),
+                                  content: const Text(
+                                      'Un peu de sport? Place toi en position de pompe avec le téléphone en dessous de toi. Lance le jeu et c\'est parti ! Fait autant de pompes que tu veux.'),
+                                  actions: [
+                                    TextButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: Color(0xFF09B198),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Ok'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MemoirePage()),
+                        MaterialPageRoute(
+                            builder: (context) => PompesPage()),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 5),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF09B198),
+                      minimumSize: Size(100, 30),
+                      maximumSize: Size(220, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.only(right: 0, left: 10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Memoire'),
+                        IconButton(
+                          icon: const Icon(Icons.info_outline),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor: Color(0xFFFAF0D5),
+                                  content: const Text(
+                                      'Pas de bonnes performance sportive sans entrainer ton cerveau. Choisi entre une suite de chiffre ou une suite de lettre. Ensuite tu verras s\'afficher pendant 3 secondes une suite de nombre (ou chiffre). Mémorise la et ensuite réécrit la. Un nombre d\'indice sont à ta disposition il permettent de rafficher la suite quelques instants. Bonne chance. '),
+                                  actions: [
+                                    TextButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: Color(0xFF09B198),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Ok'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MemoirePage()),
                       );
                     },
                   ),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/tuto/solo_game.dart';
-
+import 'package:just_audio/just_audio.dart';
 import '../Auth/widget_Tree.dart';
+//import 'package:audioplayers/audioplayers.dart';
 
 late List<Map<String, String>> countriesAndCapitals;
+late int nombrequestion ;
 
 class QuizzPage extends StatefulWidget {
   @override
@@ -24,8 +26,8 @@ class _QuizzPageState extends State<QuizzPage> {
   int _counter = 0;
   bool? answer = null;
   bool showButton = false;
-
   final TextEditingController _controller = TextEditingController();
+  late AudioPlayer player;
 
   void _incrementCounter() {
     setState(() {
@@ -36,20 +38,49 @@ class _QuizzPageState extends State<QuizzPage> {
   @override
   void initState() {
     super.initState();
+   player = AudioPlayer();
+    nombrequestion = 0;
     countriesAndCapitals = [
-      {'1': 'Paris'},
-      {'2': 'Berlin'},
-      {'3': 'London'},
-      {'4': 'Washington'},
-      {'5': 'Moscow'},
-      {'6': 'Tokyo'},
-      {'7': 'Beijing'},
-      {'8': 'Rome'},
-      {'9': 'Canberra'},
-      {'10': 'Pretoria'},
+      {
+        'Quel homme détient les records du monde des 100m et 200m ? (nom de famille)':
+            'Bolt'
+      },
+      {'Combien doit-on effectuer d\'épreuves dans le décathlon ?': '10'},
+      {
+        'Comment s\'appelle le bâton que l\'on se transmet dans les relais ?':
+            'Temoin'
+      },
+      {
+        'Quelle est la longueur d\'un tour de piste extérieur en mètres?': '400'
+      },
+      {'Vrai ou Faux: Un athlète doit-il obligatoirement porter des chaussures ?': 'Faux'},
+      {
+        'Qui est l\'actuel détenteur du record du monde du décathlon masculin ? (nom de famille)':
+            'Mayer'
+      },
+      {
+        'Pour les relais, de combien d\'athlètes se compose chaque équipe ?':
+            '4'
+      },
+      {
+        'Vrai ou Faux: Le saut à la perche est l’un des sports d’athlétisme les plus anciens au monde.':
+            'Vrai'
+      },
+      {
+        'Vrai ou Faux: Les juges olympiques doivent tenir compte du vent lorsqu’ils vérifient le résultat du saut en longueur.':
+            'Vrai'
+      },
+      {'Quelle couleur manque pour compléter le drpaeau des JO: Bleu, rouge, jaune, vert et ...':'Noir'},
+      {'Dans quelle ville seront organisé les JO 2024?':'Paris'}
     ];
     countriesAndCapitals.shuffle();
   }
+
+@override
+void dispose() {
+  player.dispose();
+  super.dispose();
+}
 
   void _showEndGameDialog(BuildContext context) {
     showDialog(
@@ -61,11 +92,13 @@ class _QuizzPageState extends State<QuizzPage> {
             return false;
           },
           child: AlertDialog(
-            title: Text("Retour à l'accueil"),
-            content: Text("Êtes-vous sûr de vouloir retourner à l'accueil ?"),
+            backgroundColor: const Color(0xFFFAF0D5),
+            title: Text("Fin du jeu",style: TextStyle(color: Color(0xFF09B198),fontSize: 20),),
+            content: Text("Votre score final est de: $_counter"),
+            
             actions: [
               TextButton(
-                child: Text('Retour à l\'accueil'),
+                child: Text('Retour à l\'accueil',style:TextStyle(color:Colors.black,fontSize: 15)),
                 onPressed: () {
                   // Ferme la boîte de dialogue et retourne à la page précédente
                   Navigator.pushAndRemoveUntil(
@@ -87,6 +120,7 @@ class _QuizzPageState extends State<QuizzPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
           iconTheme: IconThemeData(color: Color(0xFF09B198), size: 30.0),
@@ -129,28 +163,13 @@ class _QuizzPageState extends State<QuizzPage> {
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          SizedBox(height: 40),
+                          const SizedBox(height: 40),
                           SizedBox(
-                            child: Text(
-                                "Quelle est la capitale de " +
-                                    countriesAndCapitals.first.keys.first,
-                                style: TextStyle(fontSize: 20),
+                            child: Text(countriesAndCapitals.first.keys.first,
+                                style: const TextStyle(fontSize: 20),
                                 textAlign: TextAlign.center),
                           ),
-                          SizedBox(height: 20),
-                          SizedBox(
-                            child: answer == true
-                                ? const Icon(
-                                    Icons.check,
-                                    size: 50.0,
-                                    color: Colors.greenAccent,
-                                  ) // Si answer est vrai, afficher l'icône "check"
-                                : answer == false
-                                    ? const Icon(Icons.close,
-                                        size: 50.0, color: Colors.red)
-                                    : const Text(""),
-                          ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           SizedBox(
                             child: TextField(
                               style: TextStyle(fontSize: 15),
@@ -166,24 +185,9 @@ class _QuizzPageState extends State<QuizzPage> {
                                   )),
                               textAlign: TextAlign.center,
                               controller: _controller,
-                              onSubmitted: (String value) {
-                                if (_controller.text.toLowerCase() ==
-                                        countriesAndCapitals.first.values.first
-                                            .toLowerCase() &&
-                                    answer == null) {
-                                  answer = true;
-                                  showButton = true;
-                                  _controller.clear();
-                                  _incrementCounter();
-                                } else {
-                                  setState(() {
-                                    answer = false;
-                                  });
-                                }
-                              },
                             ),
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,
@@ -196,15 +200,30 @@ class _QuizzPageState extends State<QuizzPage> {
                                   const EdgeInsets.symmetric(horizontal: 16.0),
                             ),
                             child: const Text('Valider ma réponse'),
-                            onPressed: () {
-                              // code à exécuter lorsque l'utilisateur appuie sur le bouton
+                            onPressed: () async {
+                              nombrequestion++;
+                              if (_controller.text.toLowerCase() ==
+                                      countriesAndCapitals.first.values.first
+                                          .toLowerCase() && answer == null) { //le if permet de voir si c'est la bonne réponse
+                              await player.setAsset('assets/win.mp3');
+                              player.play();
+                                answer = true; 
+                                _controller.clear();
+                                _incrementCounter();
+                              } else {
+                                await player.setAsset('assets/fail.mp3');
+                                _controller.clear();
+                                player.play();
+                                setState(() {
+                                  answer = false;
+                                });
+                              }
                               setState(() {
-                                if (countriesAndCapitals.length > 1) {
+                                if (nombrequestion < 5) { //compte 
                                   countriesAndCapitals.removeAt(0);
                                   showButton = false;
                                   answer = null;
-                                  print("caca");
-                                } else if (countriesAndCapitals.length == 1) {
+                                } else if (nombrequestion == 5) {//permet de voir si c'est la fin des 5 question
                                   _showEndGameDialog(context);
                                 }
                               });
