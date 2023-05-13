@@ -3,13 +3,7 @@ import 'package:flutter_application_1/Auth/auth.dart';
 import 'package:flutter_application_1/Auth/home_page.dart';
 import 'package:flutter_application_1/Auth/login_register_page.dart';
 
-import 'package:flutter_application_1/tuto/quizzTut.dart';
-import 'package:flutter_application_1/tuto/reactivite.dart';
-import 'package:flutter_application_1/tuto/labyrinthe.dart';
-import 'package:flutter_application_1/tuto/dessin.dart';
-import 'package:flutter_application_1/tuto/memoireMenu.dart';
-import 'package:flutter_application_1/tuto/pompes.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 import '../tuto/multi_game.dart';
 import '../tuto/solo_game.dart';
 
@@ -27,12 +21,12 @@ class _WidgetTreeState extends State<WidgetTree> {
       stream: Auth().authStateChanges,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return MyHomePage( //on est connecte donc on va sur myhomepage
+          return MyHomePage(
+            //on est connecte donc on va sur myhomepage
             title: 'Games',
           );
         } else {
           return const LoginPage(); //si pas connecté va sur la login page
-        
         }
       },
     );
@@ -132,6 +126,21 @@ class _MyHomePageState extends State<MyHomePage> {
   // }
 
   @override
+  void initState() {
+    super.initState();
+    checkLocationPermission();
+  }
+
+  Future<void> checkLocationPermission() async {
+    final status = await Permission.location.request();
+    if (status.isGranted) {
+      // L'autorisation a été accordée, vous pouvez continuer
+    } else {
+      // L'autorisation a été refusée. Vous pouvez gérer ce cas en affichant un message d'information ou en demandant à nouveau l'autorisation.
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -181,8 +190,6 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  
-
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
@@ -197,12 +204,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => MultiGame()),
+                        MaterialPageRoute(builder: (context) => MultiGame()),
                       );
                     },
                   ),
-                  
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
