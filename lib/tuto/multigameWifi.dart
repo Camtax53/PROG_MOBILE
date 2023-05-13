@@ -42,7 +42,6 @@ class _CounterPageState extends State<CounterPage> {
     _timer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
       setState(() {
         counterA;
-        ;
       });
     });
   }

@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Auth/auth.dart';
 import 'package:flutter_application_1/tuto/multigameWifi.dart';
+import 'package:flutter_application_1/Multijoueurs/dessin.dart';
+import 'package:flutter_application_1/Multijoueurs/dessinView.dart';
 import 'dart:io';
 
 import 'dart:async';
 
 import 'package:flutter_p2p_connection/flutter_p2p_connection.dart';
 
-int counterA = 13;
+int counterA = 0;
 int counterAtoB = 0;
 bool isReceive = false;
+List<Offset> points = <Offset>[];
+List<Color> colors = <Color>[];
+List<double> strokeWidthList = [];
 _MultiGameState? _multiGameState;
 
 class MultiGame extends StatefulWidget {
@@ -23,7 +28,21 @@ class MultiGame extends StatefulWidget {
     print('Received count from CounterPage: $count');
     counterA = count;
     isReceive = true;
-    _multiGameState?.connectToSocketFromReceiveCount();
+    _multiGameState?.sendScore();
+
+    // Effectuez d'autres opérations avec la valeur `_count` ici
+  }
+
+  static Future<void> receiveDraw(List<Offset> _points, List<Color> _colors,
+      List<double> _strokeWidthList) async {
+    points = _points;
+    colors = _colors;
+    strokeWidthList = _strokeWidthList;
+
+    // Utilisez la valeur `_count` comme vous le souhaitez
+    print('Received count from CounterPage: ');
+
+    _multiGameState?.sendDraw();
 
     // Effectuez d'autres opérations avec la valeur `_count` ici
   }
@@ -45,8 +64,34 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
   bool areConnected = false;
   bool isSocketOpen = false;
 
-  Future connectToSocketFromReceiveCount() async {
+  Future sendScore() async {
     sendMessageToOther("CounterA: $counterA");
+  }
+
+  Future sendDraw() async {
+    List<String> serializedListPoints = points.map((offset) {
+      return "${offset.dx}:${offset.dy}"; // Format : "x:y"
+    }).toList();
+
+    String pointsAsString = serializedListPoints.join(",");
+    await sendMessageToOther("POINTS: $pointsAsString");
+
+    List<String> serializedListColors = colors.map((color) {
+      String hexString = color.value.toRadixString(16).padLeft(8, '0');
+      return hexString;
+    }).toList();
+
+    String colorsAsString = serializedListColors.join(",");
+
+    await sendMessageToOther("COLORS: $colorsAsString");
+
+    List<String> serializedListWidth = strokeWidthList.map((value) {
+      return value.toString();
+    }).toList();
+
+    String widthAsString = serializedListWidth.join(",");
+    await sendMessageToOther("STROKEWIDTHLIST: $widthAsString");
+    print("caca");
   }
 
   @override
@@ -130,10 +175,12 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
               "ID: ${transfer.id}, FILENAME: ${transfer.filename}, PATH: ${transfer.path}, COUNT: ${transfer.count}, TOTAL: ${transfer.total}, COMPLETED: ${transfer.completed}, FAILED: ${transfer.failed}, RECEIVING: ${transfer.receiving}");
         },
         receiveString: (req) async {
+          //Pour l'hote de la game
           if (req.startsWith("CounterA:")) {
             counterAtoB = int.parse(req.substring(10));
             CounterPage.receiveCount(counterAtoB);
           }
+
           //snack(req);
         },
       );
@@ -171,13 +218,58 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
               MaterialPageRoute(builder: (context) => CounterPage()),
             );
           }
+          if (req == "START DESSIN") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DessinViewPage()),
+            );
+          }
           if (req == "true") {
             isSocketOpen = true;
           }
-
+          //Envoie le score de l'hote au client
           if (req.startsWith("CounterA:")) {
             counterAtoB = int.parse(req.substring(10));
             CounterPage.receiveCount(counterAtoB);
+          }
+
+          if (req.startsWith("POINTS:")) {
+            String pointsString = req.substring(8);
+            List<String> serializedList = pointsString.split(",");
+
+            List<Offset> offsetList = serializedList.map((serializedOffset) {
+              List<String> coordinates = serializedOffset.split(":");
+              double x = double.parse(coordinates[0]);
+              double y = double.parse(coordinates[1]);
+              return Offset(x, y);
+            }).toList();
+
+            points = offsetList;
+            print("point $points");
+          }
+
+          if (req.startsWith("COLORS:")) {
+            String colorsString = req.substring(8);
+            List<String> serializedList = colorsString.split(",");
+
+            List<Color> colorList = serializedList.map((serializedColor) {
+              int value = int.parse(serializedColor, radix: 16);
+              return Color(value);
+            }).toList();
+            colors = colorList;
+            // print("couleurs $colors");
+          }
+
+          if (req.startsWith("STROKEWIDTHLIST:")) {
+            String strokeWidthString = req.substring(16);
+            List<String> serializedList = strokeWidthString.split(",");
+
+            List<double> widthList = serializedList.map((serializedDouble) {
+              return double.parse(serializedDouble);
+            }).toList();
+            strokeWidthList = widthList;
+            // print("taille $strokeWidthList");
+            DessinViewPage.receiveDraw(points, colors, strokeWidthList);
           }
 
           //snack(req + " received");
@@ -357,6 +449,18 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
                 },
                 child: const Text("Jouer"),
               ),
+            if (areConnected && wifiP2PInfo!.isGroupOwner)
+              ElevatedButton(
+                onPressed: () async {
+                  _flutterP2pConnectionPlugin
+                      .sendStringToSocket('START DESSIN');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DessinPage()),
+                  );
+                },
+                child: const Text("Jouer Dessin"),
+              )
           ],
         ),
       ),
