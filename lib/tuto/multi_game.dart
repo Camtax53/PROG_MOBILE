@@ -7,14 +7,30 @@ import 'dart:async';
 
 import 'package:flutter_p2p_connection/flutter_p2p_connection.dart';
 
+int counterA = 13;
+int counterAtoB = 0;
+bool isReceive = false;
+_MultiGameState? _multiGameState;
+
 class MultiGame extends StatefulWidget {
   MultiGame({Key? key}) : super(key: key);
 
   @override
   State<MultiGame> createState() => _MultiGameState();
 
+  static Future<void> receiveCount(int count) async {
+    // Utilisez la valeur `_count` comme vous le souhaitez
+    print('Received count from CounterPage: $count');
+    counterA = count;
+    isReceive = true;
+    _multiGameState?.connectToSocketFromReceiveCount();
+
+    // Effectuez d'autres opérations avec la valeur `_count` ici
+  }
+
   static _MultiGameState? of(BuildContext context) {
     final state = context.findAncestorStateOfType<_MultiGameState>();
+    _multiGameState = state;
     return state;
   }
 }
@@ -28,6 +44,10 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
   StreamSubscription<List<DiscoveredPeers>>? _streamPeers;
   bool areConnected = false;
   bool isSocketOpen = false;
+
+  Future connectToSocketFromReceiveCount() async {
+    sendMessageToOther("CounterA: $counterA");
+  }
 
   @override
   void initState() {
@@ -110,7 +130,11 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
               "ID: ${transfer.id}, FILENAME: ${transfer.filename}, PATH: ${transfer.path}, COUNT: ${transfer.count}, TOTAL: ${transfer.total}, COMPLETED: ${transfer.completed}, FAILED: ${transfer.failed}, RECEIVING: ${transfer.receiving}");
         },
         receiveString: (req) async {
-          snack(req);
+          if (req.startsWith("CounterA:")) {
+            counterAtoB = int.parse(req.substring(10));
+            CounterPage.receiveCount(counterAtoB);
+          }
+          //snack(req);
         },
       );
       setState(() {
@@ -151,7 +175,12 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
             isSocketOpen = true;
           }
 
-          snack(req + " received");
+          if (req.startsWith("CounterA:")) {
+            counterAtoB = int.parse(req.substring(10));
+            CounterPage.receiveCount(counterAtoB);
+          }
+
+          //snack(req + " received");
         },
       );
     }
@@ -172,6 +201,10 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
     _flutterP2pConnectionPlugin.sendStringToSocket(msgText.text);
   }
 
+  Future sendMessageToOther(String message) async {
+    _flutterP2pConnectionPlugin.sendStringToSocket(message);
+  }
+
   void snack(String msg) async {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -187,7 +220,7 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    CounterPage.of(context)?.multiGame = this;
+    _multiGameState = this;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter p2p connection plugin'),
@@ -295,7 +328,8 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
               ),
             if (wifiP2PInfo != null &&
                 !wifiP2PInfo!.isGroupOwner &&
-                !areConnected)
+                !areConnected &&
+                wifiP2PInfo?.isConnected == true)
               ElevatedButton(
                 onPressed: () async {
                   connectToSocket();
