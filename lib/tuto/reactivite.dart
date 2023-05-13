@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/Auth/auth.dart';
+import 'package:flutter_application_1/tuto/solo_game.dart';
 
 class ReactivitePage extends StatefulWidget {
   const ReactivitePage({super.key});
@@ -80,153 +81,204 @@ class _ReacitiviteState extends State<ReactivitePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Reactivite"),
+        backgroundColor: Colors.blueGrey.withOpacity(0.2),
       ),
-      body: Center(
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Column(
-            children: [
-              Text("3x3"),
-              Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      final updatedRecordMap = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => GameRoute(
-                            numberOfLines: 3,
-                            numberOfColumns: 3,
-                            time: 10,
-                            recordPersoMap: recordPersoMap,
-                            gameName: "react3x10",
-                          ),
-                        ),
-                      );
-                      if (updatedRecordMap != null) {
-                        setState(() {
-                          recordPersoMap = updatedRecordMap;
-                        });
-                      }
-                    },
-                    child: Text("10"),
-                  ),
-                  const Icon(Icons.star, color: Colors.deepPurple),
-                  Text(recordPersoMap["react3x10"]!,
-                      style: const TextStyle(
-                          fontSize: 24, color: Colors.deepPurple)),
-                ],
-              ),
-              Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      final updatedRecordMap = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => GameRoute(
-                            numberOfLines: 3,
-                            numberOfColumns: 3,
-                            time: 10,
-                            recordPersoMap: recordPersoMap,
-                            gameName: "react3x30",
-                          ),
-                        ),
-                      );
-                      if (updatedRecordMap != null) {
-                        setState(() {
-                          recordPersoMap = updatedRecordMap;
-                        });
-                      }
-                    },
-                    child: Text("30"),
-                  ),
-                  const Icon(Icons.star, color: Colors.deepPurple),
-                  Text(recordPersoMap["react3x30"]!,
-                      style: const TextStyle(
-                          fontSize: 24, color: Colors.deepPurple)),
-                ],
-              ),
-            ],
+      body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/startingblockf1.png"),
+              fit: BoxFit.cover,
+            ),
           ),
-          const VerticalDivider(
-            width: 40, // espace horizontal autour de la ligne de séparation
-            color: Colors.grey, // couleur de la ligne de séparation
-            thickness: 5, // épaisseur de la ligne de séparation
-            indent:
-                5, // espace vertical avant le début de la ligne de séparation
-            endIndent:
-                570, // espace vertical après la fin de la ligne de séparation
-          ),
-          Column(
-            children: [
-              Text("5x5"),
-              Row(
+          child: Padding(
+            padding: EdgeInsets.only(top: kToolbarHeight + 100),
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              const SizedBox(height: 230),
+              Column(
                 children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      final updatedRecordMap = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => GameRoute(
-                            numberOfLines: 5,
-                            numberOfColumns: 5,
-                            time: 10,
-                            recordPersoMap: recordPersoMap,
-                            gameName: "react5x10",
-                          ),
-                        ),
-                      );
-                      if (updatedRecordMap != null) {
-                        setState(() {
-                          recordPersoMap = updatedRecordMap;
-                        });
-                      }
-                    },
-                    child: Text("10"),
+                  const Text(
+                    "Taille 3x3",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold, // texte en gras
+                      fontSize: 20, // taille du texte augmentée à 20
+                    ),
                   ),
-                  const Icon(Icons.star, color: Colors.deepPurple),
-                  Text(recordPersoMap["react5x10"]!,
-                      style: const TextStyle(
-                          fontSize: 24, color: Colors.deepPurple)),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          final updatedRecordMap = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GameRoute(
+                                numberOfLines: 3,
+                                numberOfColumns: 3,
+                                time: 10,
+                                recordPersoMap: recordPersoMap,
+                                gameName: "react3x10",
+                              ),
+                            ),
+                          );
+                          if (updatedRecordMap != null) {
+                            setState(() {
+                              recordPersoMap = updatedRecordMap;
+                            });
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: const Color(
+                              0xFFC21723), // couleur de fond personnalisée
+                        ),
+                        child: const Text("10 sec"),
+                      ),
+                      const Icon(Icons.star, color: Colors.black),
+                      Text(recordPersoMap["react3x10"]!,
+                          style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          final updatedRecordMap = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GameRoute(
+                                numberOfLines: 3,
+                                numberOfColumns: 3,
+                                time: 30,
+                                recordPersoMap: recordPersoMap,
+                                gameName: "react3x30",
+                              ),
+                            ),
+                          );
+                          if (updatedRecordMap != null) {
+                            setState(() {
+                              recordPersoMap = updatedRecordMap;
+                            });
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: const Color(
+                              0xFFC21723), // couleur de fond personnalisée
+                        ),
+                        child: const Text("30 sec"),
+                      ),
+                      const Icon(Icons.star, color: Colors.black),
+                      Text(recordPersoMap["react3x30"]!,
+                          style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
                 ],
               ),
-              Row(
+              const VerticalDivider(
+                width: 40, // espace horizontal autour de la ligne de séparation
+                color: Colors.black, // couleur de la ligne de séparation
+                thickness: 10, // épaisseur de la ligne de séparation
+                indent:
+                    5, // espace vertical avant le début de la ligne de séparation
+                endIndent:
+                    570, // espace vertical après la fin de la ligne de séparation
+              ),
+              Column(
                 children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      final updatedRecordMap = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => GameRoute(
-                            numberOfLines: 5,
-                            numberOfColumns: 5,
-                            time: 10,
-                            recordPersoMap: recordPersoMap,
-                            gameName: "react5x30",
-                          ),
-                        ),
-                      );
-                      if (updatedRecordMap != null) {
-                        setState(() {
-                          recordPersoMap = updatedRecordMap;
-                        });
-                      }
-                    },
-                    child: Text("30"),
+                  const Text(
+                    "Taille 5x5",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold, // texte en gras
+                      fontSize: 20, // taille du texte augmentée à 20
+                    ),
                   ),
-                  const Icon(Icons.star, color: Colors.deepPurple),
-                  Text(recordPersoMap["react5x30"]!,
-                      style: const TextStyle(
-                          fontSize: 24, color: Colors.deepPurple)),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          final updatedRecordMap = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GameRoute(
+                                numberOfLines: 5,
+                                numberOfColumns: 5,
+                                time: 10,
+                                recordPersoMap: recordPersoMap,
+                                gameName: "react5x10",
+                              ),
+                            ),
+                          );
+                          if (updatedRecordMap != null) {
+                            setState(() {
+                              recordPersoMap = updatedRecordMap;
+                            });
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: const Color(
+                              0xFFC21723), // couleur de fond personnalisée
+                        ),
+                        child: const Text("10 sec"),
+                      ),
+                      const Icon(Icons.star, color: Colors.black),
+                      Text(recordPersoMap["react5x10"]!,
+                          style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          final updatedRecordMap = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GameRoute(
+                                numberOfLines: 5,
+                                numberOfColumns: 5,
+                                time: 30,
+                                recordPersoMap: recordPersoMap,
+                                gameName: "react5x30",
+                              ),
+                            ),
+                          );
+                          if (updatedRecordMap != null) {
+                            setState(() {
+                              recordPersoMap = updatedRecordMap;
+                            });
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: const Color(
+                              0xFFC21723), // couleur de fond personnalisée
+                        ),
+                        child: const Text("30 sec"),
+                      ),
+                      const Icon(Icons.star, color: Colors.black),
+                      Text(recordPersoMap["react5x30"]!,
+                          style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
                 ],
               ),
-            ],
-          ),
-        ]),
-      ),
+            ]),
+          )),
     );
   }
 }
@@ -311,19 +363,52 @@ class _GameRouteState extends State<GameRoute> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // Code de construction de l'interface graphique ici
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: _onBackPressed,
-        ),
-        title: Text(widget.gameName),
+Widget build(BuildContext context) {
+  // Code de construction de l'interface graphique ici
+  return Scaffold(
+    extendBodyBehindAppBar: true,
+    appBar: AppBar(
+       backgroundColor: Colors.blueGrey.withOpacity(0.2), // rendre la barre d'applications transparente
+      actions: [
+        Padding(
+              padding: const EdgeInsets.only(right: 20, top: 5),
+              child: Container(
+                height: 30,
+                width: 110,
+                decoration: BoxDecoration(
+                  color: Colors.amber[800],
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: SizedBox(
+                  child: Text(
+                    "Score: $score" ,
+                    style: const TextStyle(fontSize: 17),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ),],
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: _onBackPressed,
       ),
-      body: game(numberOfLines, numberOfColumns, countdown),
-    );
-  }
+    ),
+    body: Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/f1fond.jpg'),
+          fit: BoxFit.cover, // ajuster l'image pour remplir tout l'écran
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(top:10),
+        child: Stack(children: [game(numberOfLines, numberOfColumns, countdown)]),
+      ),
+    ),
+  );
+}
+
 
   void handleButtonPress(int buttonIndex) {
     if (buttonIndex == activeButton && countdown > 0) {
@@ -335,21 +420,67 @@ class _GameRouteState extends State<GameRoute> {
   }
 
   Widget game(int numberOfLines, int numberOfColumns, int time) {
-    return Column(
+    return ListView(
       children: [
-        Text(
-          "Temps restant: $countdown secondes",
-          style: const TextStyle(fontSize: 24),
+        Text.rich(
+  TextSpan(
+    text: 'Temps restant: ',
+    style: const TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
+    ),
+    children: [
+      TextSpan(
+        text: '$countdown',
+        style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: Colors.amber[800],
         ),
-        Text(
-          "Score: $score",
-          style: const TextStyle(fontSize: 24),
+      ),
+      const TextSpan(
+        text: ' secondes',
+        style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
         ),
+      ),
+    ],
+  ),
+),
         if (countdown == 0)
-          const Text(
-            "Fin du jeu",
-            style: TextStyle(fontSize: 24),
-          ),
+           Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 20),
+            const Text(
+              "Fin du jeu!",
+              style: TextStyle(fontSize: 24),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(
+                              0xFFC21723), // couleur de fond personnalisée
+                        ),
+                child: const Text('Retour à l\'accueil',style:TextStyle(color:Colors.white,fontSize: 15)),
+                onPressed: () {
+                  // Ferme la boîte de dialogue et retourne à la page précédente
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => const SoloGame()),
+                    (Route<dynamic> route) =>
+                        false, // Cette fonction empêche la navigation en arrière
+                  );
+                },
+              ),
+          ],
+        ),
         if (countdown > 0)
           GridView.count(
             crossAxisCount: numberOfColumns,
@@ -357,13 +488,13 @@ class _GameRouteState extends State<GameRoute> {
             children: List.generate(numberOfColumns * numberOfLines, (index) {
               return IconButton(
                 onPressed: () => handleButtonPress(index),
-                icon: Icon(
-                    index == activeButton
-                        ? Icons.sports_soccer
-                        : Icons.sports_basketball,
-                    size: 60.0,
-                    color:
-                        index == activeButton ? Colors.black : Colors.orange),
+                icon: Image.asset(
+                  index == activeButton
+                      ? 'assets/boutongreen.png'
+                      : 'assets/boutonred.png',
+                  height: 90.0,
+                  width: 90.0,
+                ),
               );
             }),
           ),
