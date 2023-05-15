@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Auth/auth.dart';
 import 'package:flutter_application_1/Auth/home_page.dart';
@@ -20,6 +22,7 @@ class SoloGame extends StatefulWidget {
 
 class _SoloGameState extends State<SoloGame> {
   double _buttonPosition = 0.0;
+
   Future<void> signOut(BuildContext context) async {
     bool confirm = await showDialog(
       context: context,
@@ -113,9 +116,9 @@ class _SoloGameState extends State<SoloGame> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Color(0xFF09B198),
-                      minimumSize: Size(100, 30),
-                      maximumSize: Size(220, 50),
+                      backgroundColor: const Color(0xFF09B198),
+                      minimumSize: const Size(100, 30),
+                      maximumSize: const Size(220, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
