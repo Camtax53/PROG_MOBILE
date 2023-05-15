@@ -147,7 +147,8 @@ void dispose() {
               ),
             ),
           ]),
-      body: Stack(children: [
+      body: Stack(
+        children: [
         Image.asset(
           "assets/running.jpg",
           fit: BoxFit.cover,

@@ -74,7 +74,6 @@ class _ReacitiviteState extends State<ReactivitePage> {
   void initState() {
     super.initState();
     uid = FirebaseAuth.instance.currentUser!.uid;
-
     addNewUserIntoFirestore();
   }
 
@@ -135,7 +134,7 @@ class _ReacitiviteState extends State<ReactivitePage> {
                         ),
                         child: const Text("10 sec"),
                       ),
-                      const Icon(Icons.star, color: Colors.black),
+                      const Icon(Icons.emoji_events, color: Colors.black),
                       Text(recordPersoMap["react3x10"]!,
                           style: const TextStyle(
                               fontSize: 16,
@@ -172,7 +171,7 @@ class _ReacitiviteState extends State<ReactivitePage> {
                         ),
                         child: const Text("30 sec"),
                       ),
-                      const Icon(Icons.star, color: Colors.black),
+                      const Icon(Icons.emoji_events, color: Colors.black),
                       Text(recordPersoMap["react3x30"]!,
                           style: const TextStyle(
                               fontSize: 16,
@@ -230,7 +229,7 @@ class _ReacitiviteState extends State<ReactivitePage> {
                         ),
                         child: const Text("10 sec"),
                       ),
-                      const Icon(Icons.star, color: Colors.black),
+                      const Icon(Icons.emoji_events, color: Colors.black),
                       Text(recordPersoMap["react5x10"]!,
                           style: const TextStyle(
                               fontSize: 16,
@@ -267,7 +266,7 @@ class _ReacitiviteState extends State<ReactivitePage> {
                         ),
                         child: const Text("30 sec"),
                       ),
-                      const Icon(Icons.star, color: Colors.black),
+                      const Icon(Icons.emoji_events, color: Colors.black),
                       Text(recordPersoMap["react5x30"]!,
                           style: const TextStyle(
                               fontSize: 16,
@@ -278,11 +277,14 @@ class _ReacitiviteState extends State<ReactivitePage> {
                 ],
               ),
             ]),
-          )),
+          )
+      ),
     );
   }
 }
 
+
+//nouvelle classe pr le jeu
 class GameRoute extends StatefulWidget {
   final int numberOfLines;
   final int numberOfColumns;
@@ -388,7 +390,8 @@ Widget build(BuildContext context) {
                   ),
                 ),
               ),
-            ),],
+            ),
+        ],
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: _onBackPressed,

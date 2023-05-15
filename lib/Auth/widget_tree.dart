@@ -146,6 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
         elevation: 0,
         actions: [
           Padding(

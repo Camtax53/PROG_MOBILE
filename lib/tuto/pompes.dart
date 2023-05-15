@@ -61,20 +61,31 @@ class _PompesState extends State<PompesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
+        extendBodyBehindAppBar: true,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.secondary,
+          backgroundColor: Colors.blueGrey.withOpacity(0.2),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: const Text('Pompes'),
+          
         ),
-        body: Center(
-          child: Text('Nombre de pompes :  $_counter\n'),
+        body: Stack(
+          children: [
+            Image.asset(
+          "assets/pompes.jpg",
+          fit: BoxFit.cover,
+          height: double.infinity,
+          width: double.infinity,
         ),
-      ),
+        Align(
+          alignment: Alignment.center,
+          child : Text('Nombre de pompes :  $_counter\n',style: const TextStyle(fontSize: 15)),
+        )
+          ],
+        ),
     );
   }
 }

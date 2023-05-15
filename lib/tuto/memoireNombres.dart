@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_application_1/tuto/solo_game.dart';
 
 class MemoireNombresPage extends StatefulWidget {
   @override
@@ -103,122 +104,215 @@ class _MemoireNombresPageState extends State<MemoireNombresPage> {
     });
   }
 
-  @override
+    @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          backgroundColor: Colors.deepPurple,
-          title: const Text('MemoireNombres'),
-          actions: <Widget>[
-            const Icon(Icons.emoji_events, color: Colors.white),
-            Text(" $recordPerso", style: TextStyle(color: Colors.white)),
-            const Icon(Icons.star, color: Colors.deepPurple),
-          ]),
-      body: Column(children: [
-        Text("\n Round $round \n\n", style: TextStyle(fontSize: 24)),
-        Visibility(
-          visible: isVisible,
-          child: Text("$randomNumber", style: TextStyle(fontSize: 24)),
-        ),
-        Visibility(
-          visible: !isVisible,
-          child: Text("$attente", style: const TextStyle(fontSize: 24)),
-        ),
-        TextField(
-          decoration: const InputDecoration(
-            labelText: 'Entrez votre texte',
-            border: OutlineInputBorder(),
-          ),
-          controller: _controller,
-          enabled: !isVisible,
-          onSubmitted: (value) {
-            setState(() {
-              inputText = value;
-
-              if (inputText == randomNumber && !isVisible) {
-                isVisible = true;
-                addRecord();
-                addRandomNumber();
-                round++;
-                Timer(Duration(seconds: time), () {
-                  setState(() {
-                    isVisible = false;
-                  });
-                });
-                if (round % 5 == 0) {
-                  remainingHints++;
-                }
-              } else {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Perdu !"),
-                      content: Text("Vous avez perdu la partie."),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          child: Text("OK"),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            reset();
-                            Timer(Duration(seconds: time), () {
-                              setState(() {
-                                isVisible = false;
-                              });
-                            });
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              }
-            });
-            _controller.clear();
-          },
-        ),
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              if (remainingHints > 0) {
-                isVisible = true;
-                remainingHints--;
-
-                Timer(Duration(seconds: time), () {
-                  setState(() {
-                    isVisible = false;
-                  });
-                });
-              }
-            });
-          },
-          child: Stack(
-            children: [
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: const Text('Indice'),
+        resizeToAvoidBottomInset: false,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.blueGrey.withOpacity(0.2),
+          title: const Text('Nombres'),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20, top: 5),
+              child: Container(
+                height: 30,
+                width: 110,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: SizedBox(
+                  child: Text(
+                    "Round $round",
+                    style: TextStyle(color: Colors.black, fontSize: 17),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
-              if (remainingHints > 0)
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
+            ),
+          ], //si je veux acceder au record perso c'est : Text(" $recordPerso", style: TextStyle(color: Colors.white))
+        ),
+        body: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/ballet.png"),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  top: kToolbarHeight + 40, left: 20, right: 20),
+              child: Column(children: [
+                Visibility(
+                  visible: isVisible,
+                  child: Text("$randomNumber",
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                ),
+                Visibility(
+                  visible: !isVisible,
+                  child: Text("$attente",
+                      style: const TextStyle(
+                          fontSize: 30, fontWeight: FontWeight.bold)),
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  decoration: InputDecoration(
+                      labelText: 'Entrez votre texte',
+                      filled: true,
+                      fillColor: Colors.grey.shade300,
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(width: 3, color: Colors.black),
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      )),
+                  controller: _controller,
+                  enabled: !isVisible,
+                  keyboardType: TextInputType.number,
+                  onSubmitted: (value) {
+                    setState(() {
+                      inputText = value;
+
+                      if (inputText == randomNumber && !isVisible) {
+                        isVisible = true;
+                        addRecord();
+                        addRandomNumber();
+                        round++;
+                        Timer(Duration(seconds: time), () {
+                          setState(() {
+                            isVisible = false;
+                          });
+                        });
+                        if (round % 5 == 0) {
+                          remainingHints++;
+                        }
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Row(
+                                children: [
+                                  Text("Perdu !"),
+                                  SizedBox(width: 8),
+                                  Icon(Icons.filter_vintage_outlined,
+                                      color: Colors.grey),
+                                ],
+                              ),
+                              content: Text("Vous avez perdu la partie."),
+                              backgroundColor: Colors.white,
+                              actions: <Widget>[
+                                ButtonBar(
+                                  children: [
+                                    ElevatedButton(
+                                      // child: Text("Accueil"),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors
+                                            .grey, // couleur de fond personnalisée
+                                      ),
+                                      child: const Text('Accueil',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15)),
+                                      onPressed: () {
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  const SoloGame()),
+                                          (Route<dynamic> route) =>
+                                              false, // Cette fonction empêche la navigation en arrière
+                                        );
+                                      },
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors
+                                            .grey, // couleur de fond personnalisée
+                                      ),
+                                      child: const Text('Restart',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15)),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        reset();
+                                        Timer(Duration(seconds: time), () {
+                                          setState(() {
+                                            isVisible = false;
+                                          });
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    });
+                    _controller.clear();
+                  },
+                ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  
+                  child: ElevatedButton(
+                    //indice
+                     style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFCFD3D6), // couleur de fond personnalisée
                     ),
-                    child: Text(
-                      remainingHints.toString(),
-                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                    onPressed: () {
+                      setState(() {
+                        if (remainingHints > 0) {
+                          isVisible = true;
+                          remainingHints--;
+
+                          Timer(Duration(seconds: time), () {
+                            setState(() {
+                              isVisible = false;
+                            });
+                          });
+                        }
+                      });
+                    },
+                    child: Stack(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                         
+                          child: const Text(
+                            'Indice',
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        if (remainingHints > 0)
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFFFCB2D),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Text(
+                                remainingHints.toString(),
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 12),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ),
-            ],
-          ),
-        ),
-      ]),
-    );
+              ]),
+            )));
   }
 }

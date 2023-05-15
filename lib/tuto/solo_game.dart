@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Auth/auth.dart';
 import 'package:flutter_application_1/Auth/home_page.dart';
 import 'package:flutter_application_1/Auth/login_register_page.dart';
+import 'package:flutter_application_1/Auth/widget_tree.dart';
 
 import 'package:flutter_application_1/tuto/quizzTut.dart';
 import 'package:flutter_application_1/tuto/reactivite.dart';
@@ -79,27 +80,13 @@ class _SoloGameState extends State<SoloGame> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 20),
-            child: Container(
-              height: 35,
-              width: 35,
-              decoration: BoxDecoration(
-                color: Color(0xFF09B198),
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.logout),
-                color: Colors.white,
-                onPressed: () {
-                  signOut(context);
-                },
-              ),
-            ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => WidgetTree()),
           ),
-        ],
+        ),
       ),
       body: Stack(children: [
         Image.asset(
@@ -132,12 +119,20 @@ class _SoloGameState extends State<SoloGame> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: const EdgeInsets.only(right: 00, left: 5),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10), // Ajustement de la marge horizontale
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Quizz sur l\'athlétisme'),
+                        Expanded(
+                          
+                          child: Text(
+                            'Quizz sur l\'athlétisme',
+                            overflow: TextOverflow
+                                .ellipsis, // ellipse en cas de dépassement
+                          ),
+                        ),
                         IconButton(
                           icon: const Icon(Icons.info_outline),
                           onPressed: () {
@@ -147,7 +142,8 @@ class _SoloGameState extends State<SoloGame> {
                                 return AlertDialog(
                                   backgroundColor: Color(0xFFFAF0D5),
                                   content: const Text(
-                                      'Ce quizz va tester tes connaissances en matière d\'athlétisme. Répond à cinq questions au hasard et obtient le meilleur score.'),
+                                    'Ce quizz va tester tes connaissances en matière d\'athlétisme. Répond à cinq questions au hasard et obtient le meilleur score.',
+                                  ),
                                   actions: [
                                     TextButton(
                                       style: ElevatedButton.styleFrom(
@@ -188,7 +184,8 @@ class _SoloGameState extends State<SoloGame> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: const EdgeInsets.only(right: 0, left: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -245,7 +242,8 @@ class _SoloGameState extends State<SoloGame> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: const EdgeInsets.only(right: 0, left: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -302,7 +300,8 @@ class _SoloGameState extends State<SoloGame> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: const EdgeInsets.only(right: 0, left: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -344,8 +343,7 @@ class _SoloGameState extends State<SoloGame> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => DessinPage()),
+                        MaterialPageRoute(builder: (context) => DessinPage()),
                       );
                     },
                   ),
@@ -359,7 +357,8 @@ class _SoloGameState extends State<SoloGame> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: const EdgeInsets.only(right: 0, left: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -401,8 +400,7 @@ class _SoloGameState extends State<SoloGame> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => PompesPage()),
+                        MaterialPageRoute(builder: (context) => PompesPage()),
                       );
                     },
                   ),
@@ -416,7 +414,8 @@ class _SoloGameState extends State<SoloGame> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: const EdgeInsets.only(right: 0, left: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -458,8 +457,7 @@ class _SoloGameState extends State<SoloGame> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => MemoirePage()),
+                        MaterialPageRoute(builder: (context) => MemoirePage()),
                       );
                     },
                   ),
