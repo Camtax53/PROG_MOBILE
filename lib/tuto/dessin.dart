@@ -40,14 +40,14 @@ class DessinPage extends StatefulWidget {
 }
 
 class _DessinPageState extends State<DessinPage> {
-  List<Offset> _points = <Offset>[];
-  List<Color> _colors = <Color>[];
+  List<Offset> points = <Offset>[];
+  List<Color> colors = <Color>[];
   List<double> strokeWidthList = [];
 
   void _addPoint(Offset point, Color color, double strokeWidth) {
     setState(() {
-      _points.add(point);
-      _colors.add(color);
+      points.add(point);
+      colors.add(color);
       strokeWidthList.add(strokeWidth);
     });
     (context.findRenderObject() as RenderObject).markNeedsPaint();
@@ -61,7 +61,7 @@ class _DessinPageState extends State<DessinPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFF09B198),
+        backgroundColor: const Color(0xFF09B198),
         title: const Text('Dessin '),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -69,17 +69,18 @@ class _DessinPageState extends State<DessinPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             IconButton(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: () {
                 setState(() {
-                  _points.clear();
-                  _colors.clear();
+                  points.clear();
+                  colors.clear();
                 });
               },
             ),
             IconButton(
-              icon: Icon(Icons.color_lens),
-              color: _currentColor != Colors.white ? _currentColor : Colors.black,
+              icon: const Icon(Icons.color_lens),
+              color:
+                  _currentColor != Colors.white ? _currentColor : Colors.black,
               onPressed: () {
                 showDialog(
                   context: context,
@@ -110,7 +111,7 @@ class _DessinPageState extends State<DessinPage> {
               },
             ),
             IconButton(
-              icon: Icon(Icons.fluorescent_rounded),
+              icon: const Icon(Icons.fluorescent_rounded),
               onPressed: () {
                 setState(() {
                   _currentColor = Colors
@@ -119,7 +120,7 @@ class _DessinPageState extends State<DessinPage> {
               },
             ),
             IconButton(
-              icon: Icon(Icons.brush),
+              icon: const Icon(Icons.brush),
               onPressed: () {
                 showDialog(
                   context: context,
@@ -171,22 +172,18 @@ class _DessinPageState extends State<DessinPage> {
               //dessine sur l'écran selon les mouvements du doigt
               onPanStart: (details) => setState(() {
                 _addPoint(details.localPosition, _currentColor, _strokeWidth);
-
                 endPoint.add(false);
               }),
               onPanUpdate: (details) => setState(() {
-                print(_strokeWidth);
                 _addPoint(details.localPosition, _currentColor, _strokeWidth);
-
                 endPoint.add(false);
               }),
               onPanEnd: (details) => setState(() {
                 _addPoint(Offset.zero, _currentColor, _strokeWidth);
-
                 endPoint.add(true);
               }),
               child: CustomPaint(
-                painter: DrawingPainter(_points, _colors, strokeWidthList),
+                painter: DrawingPainter(points, colors, strokeWidthList),
                 size: Size.infinite,
               ),
             ),

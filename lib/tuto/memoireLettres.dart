@@ -62,16 +62,14 @@ class _MemoireLettresPageState extends State<MemoireLettresPage> {
   }
 
   void getRecord() async {
-    QuerySnapshot snapshotUid = await recordCollection
-        .where('uid', isEqualTo: uid)
-        .get();
+    QuerySnapshot snapshotUid =
+        await recordCollection.where('uid', isEqualTo: uid).get();
     String record = snapshotUid.docs.first.get('score').toString();
-      if (snapshotUid.docs.isNotEmpty) {
-        recordPerso = record;
-      } else {
-        recordPerso = "0";
-      }
-    
+    if (snapshotUid.docs.isNotEmpty) {
+      recordPerso = record;
+    } else {
+      recordPerso = "0";
+    }
   }
 
   void addNewUserIntoFirestore() async {
@@ -145,12 +143,12 @@ class _MemoireLettresPageState extends State<MemoireLettresPage> {
                 Visibility(
                   visible: isVisible,
                   child: Text(randomLetter,
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                      style: const TextStyle(
+                          fontSize: 30, fontWeight: FontWeight.bold)),
                 ),
                 Visibility(
                   visible: !isVisible,
-                  child: Text("$attente",
+                  child: Text(attente,
                       style: const TextStyle(
                           fontSize: 30, fontWeight: FontWeight.bold)),
                 ),
@@ -196,8 +194,8 @@ class _MemoireLettresPageState extends State<MemoireLettresPage> {
                                       color: Colors.white),
                                 ],
                               ),
-                              content: Text("Vous avez perdu la partie."),
-                              backgroundColor: Color(0xFFDC5259),
+                              content: const Text("Vous avez perdu la partie."),
+                              backgroundColor: const Color(0xFFDC5259),
                               actions: <Widget>[
                                 ButtonBar(
                                   children: [

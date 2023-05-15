@@ -43,14 +43,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  double _buttonPosition = 0.0;
-
   Future<void> signOut(BuildContext context) async {
     bool confirm = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Color(0xFFFAF0D5),
+          backgroundColor: const Color(0xFFFAF0D5),
           title: const Text(
             "Êtes-vous sûr de vouloir vous déconnecter?",
             style: TextStyle(
@@ -123,12 +121,12 @@ class _MyHomePageState extends State<MyHomePage> {
         elevation: 0,
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 20),
+            padding: const EdgeInsets.only(right: 20),
             child: Container(
               height: 39,
               width: 35,
               decoration: BoxDecoration(
-                color: Color(0xFF09B198),
+                color: const Color(0xFF09B198),
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(5),
               ),
@@ -157,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
             width: 230,
             decoration: BoxDecoration(
               color: Colors.blueGrey.withOpacity(0.2),
-              borderRadius: BorderRadius.vertical(
+              borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(10), bottom: Radius.circular(10)),
             ),
             child: SingleChildScrollView(
@@ -167,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Color(0xFF09B198),
+                      backgroundColor: const Color(0xFF09B198),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -185,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Color(0xFF09B198),
+                      backgroundColor: const Color(0xFF09B198),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -196,7 +194,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SoloGame()),
+                        MaterialPageRoute(
+                            builder: (context) => const SoloGame()),
                       );
                     },
                   ),

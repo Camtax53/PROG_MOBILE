@@ -21,7 +21,7 @@ class _PompesState extends State<PompesPage> {
     if (!_isCounting) {
       _isCounting = true;
       _counter++;
-      Timer(Duration(seconds: 1), () {
+      Timer(const Duration(seconds: 1), () {
         setState(() {
           _isCounting = false;
         });
@@ -62,30 +62,30 @@ class _PompesState extends State<PompesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: Colors.blueGrey.withOpacity(0.2),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pop(),
+      extendBodyBehindAppBar: true,
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: Colors.blueGrey.withOpacity(0.2),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: Stack(
+        children: [
+          Image.asset(
+            "assets/pompes.jpg",
+            fit: BoxFit.cover,
+            height: double.infinity,
+            width: double.infinity,
           ),
-          
-        ),
-        body: Stack(
-          children: [
-            Image.asset(
-          "assets/pompes.jpg",
-          fit: BoxFit.cover,
-          height: double.infinity,
-          width: double.infinity,
-        ),
-        Align(
-          alignment: Alignment.center,
-          child : Text('Nombre de pompes :  $_counter\n',style: const TextStyle(fontSize: 15)),
-        )
-          ],
-        ),
+          Align(
+            alignment: Alignment.center,
+            child: Text('Nombre de pompes :  $_counter\n',
+                style: const TextStyle(fontSize: 15)),
+          )
+        ],
+      ),
     );
   }
 }
