@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/services.dart';
+import 'package:just_audio/just_audio.dart';
 import 'dart:async';
 import 'package:proximity_sensor/proximity_sensor.dart';
 import 'package:flutter_application_1/tuto/multi_game.dart';
@@ -29,6 +30,7 @@ class _PompesState extends State<PompesPage> {
   late Timer _timer;
   int countdown = 10;
   int counterMilli = 0;
+  late AudioPlayer player;
 
   void _startCounting() {
     if (!_isCounting) {
@@ -45,6 +47,7 @@ class _PompesState extends State<PompesPage> {
   @override
   void initState() {
     super.initState();
+    player = AudioPlayer();
     _startTimer();
     listenSensor();
   }
@@ -59,6 +62,15 @@ class _PompesState extends State<PompesPage> {
           countdown--;
         } else {
           counterMilli += 200;
+        }
+        if (countdown == 0 && counterA > _counter) {
+          player.setAsset('assets/ko.mp3');
+          player.play();
+          timer.cancel();
+        } else if (countdown == 0 && counterA < _counter) {
+          player.setAsset('assets/winBoxe.mp3');
+          player.play();
+          timer.cancel();
         }
       });
     });
@@ -94,6 +106,7 @@ class _PompesState extends State<PompesPage> {
   @override
   void dispose() {
     _streamSubscription.cancel();
+    player.dispose();
     _stopTimer();
     counterA = 0;
     super.dispose();
