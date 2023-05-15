@@ -9,6 +9,7 @@ double _strokeWidth = 5.0;
 late List<String> toDraw;
 bool resultFromPlayerB = false;
 
+//sert a dessiner sur l'ecran
 class DrawingPainter extends CustomPainter {
   DrawingPainter(this.points, this.colors, this.strokeWidthList);
 
@@ -40,18 +41,20 @@ class DrawingPainter extends CustomPainter {
 }
 
 class DessinPage extends StatefulWidget {
+  const DessinPage({super.key});
+
   @override
   _DessinPageState createState() => _DessinPageState();
 
+  //recevoir si l'autre joueur a trouver le mot a dessiner
   static void receiveResult(bool result) {
     resultFromPlayerB = result;
-    print(resultFromPlayerB);
   }
 }
 
 class _DessinPageState extends State<DessinPage> {
-  List<Offset> _points = <Offset>[];
-  List<Color> _colors = <Color>[];
+  List<Offset> points = <Offset>[];
+  List<Color> colors = <Color>[];
   List<double> strokeWidthList = [];
   late Timer _timer;
   int countdown = 10;
@@ -63,7 +66,19 @@ class _DessinPageState extends State<DessinPage> {
     super.initState();
     _startTimer();
 
-    toDraw = ['bite', 'banane', 'coeur'];
+    toDraw = [
+      'tennis',
+      'football',
+      'basketball',
+      'handball',
+      'volleyball',
+      'golf',
+      'natation',
+      'rugby',
+      'equitation',
+      'ski',
+      'surf'
+    ];
     toDraw.shuffle();
     MultiGame.receiveList(toDraw);
   }
@@ -73,8 +88,8 @@ class _DessinPageState extends State<DessinPage> {
       setState(() {
         resultFromPlayerB;
         if (resultFromPlayerB) {
-          _points.clear();
-          _colors.clear();
+          points.clear();
+          colors.clear();
           score++;
           strokeWidthList.clear();
           toDraw.removeAt(0);
@@ -91,15 +106,13 @@ class _DessinPageState extends State<DessinPage> {
   }
 
   void _stopTimer() {
-    if (_timer != null) {
-      _timer.cancel();
-    }
+    _timer.cancel();
   }
 
   void _addPoint(Offset point, Color color, double strokeWidth) {
     setState(() {
-      _points.add(point);
-      _colors.add(color);
+      points.add(point);
+      colors.add(color);
       strokeWidthList.add(strokeWidth);
     });
     (context.findRenderObject() as RenderObject).markNeedsPaint();
@@ -107,7 +120,7 @@ class _DessinPageState extends State<DessinPage> {
 
   void sendCountToOtherFile() {
     // Appel de la fonction de rappel
-    MultiGame.receiveDraw(_points, _colors, strokeWidthList);
+    MultiGame.receiveDraw(points, colors, strokeWidthList);
   }
 
   Color _currentColor = Colors.black; // Couleur du pinceau
@@ -118,8 +131,8 @@ class _DessinPageState extends State<DessinPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFF09B198),
-        title: Text("Score: " + score.toString()),
+        backgroundColor: const Color(0xFF09B198),
+        title: Text("Score: $score"),
         actions: [Text(countdown.toString())],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -127,16 +140,16 @@ class _DessinPageState extends State<DessinPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             IconButton(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: () {
                 setState(() {
-                  _points.clear();
-                  _colors.clear();
+                  points.clear();
+                  colors.clear();
                 });
               },
             ),
             IconButton(
-              icon: Icon(Icons.color_lens),
+              icon: const Icon(Icons.color_lens),
               color:
                   _currentColor != Colors.white ? _currentColor : Colors.black,
               onPressed: () {
@@ -169,7 +182,7 @@ class _DessinPageState extends State<DessinPage> {
               },
             ),
             IconButton(
-              icon: Icon(Icons.fluorescent_rounded),
+              icon: const Icon(Icons.fluorescent_rounded),
               onPressed: () {
                 setState(() {
                   _currentColor = Colors
@@ -178,7 +191,7 @@ class _DessinPageState extends State<DessinPage> {
               },
             ),
             IconButton(
-              icon: Icon(Icons.brush),
+              icon: const Icon(Icons.brush),
               onPressed: () {
                 showDialog(
                   context: context,
@@ -257,7 +270,7 @@ class _DessinPageState extends State<DessinPage> {
           if (!resultFromPlayerB && countdown != 0)
             Text(toDraw.first)
           else if (resultFromPlayerB && countdown != 0)
-            Text(toDraw.first + 'Trouvé'),
+            Text('${toDraw.first}  Trouvé'),
           if (countdown > 0)
             Expanded(
               child: GestureDetector(
@@ -275,12 +288,10 @@ class _DessinPageState extends State<DessinPage> {
                 onPanEnd: (details) => setState(() {
                   _addPoint(Offset.zero, _currentColor, _strokeWidth);
                   sendCountToOtherFile();
-                  print(_points);
-
                   endPoint.add(true);
                 }),
                 child: CustomPaint(
-                  painter: DrawingPainter(_points, _colors, strokeWidthList),
+                  painter: DrawingPainter(points, colors, strokeWidthList),
                   size: Size.infinite,
                 ),
               ),
