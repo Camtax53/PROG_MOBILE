@@ -29,7 +29,6 @@ class MultiGame extends StatefulWidget {
 
   static Future<void> receiveCount(int count) async {
     // Utilisez la valeur `_count` comme vous le souhaitez
-    print('Received count from CounterPage: $count');
     counterA = count;
     isReceive = true;
     _multiGameState?.sendScore();
