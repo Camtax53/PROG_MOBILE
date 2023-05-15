@@ -98,33 +98,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  // void _onVerticalDragUpdate(DragUpdateDetails details) {
-  //   setState(() {
-  //     _buttonPosition += details.delta.dy;
-  //     if (_buttonPosition < 0) {
-  //       _buttonPosition = 0;
-  //     } else if (_buttonPosition > 200) {
-  //       _buttonPosition = 200;
-  //     }
-  //   });
-  // }
-
-  // Widget _signOutButton() {
-  //   return ElevatedButton(
-  //     style: ElevatedButton.styleFrom(
-  //       foregroundColor: Colors.white,
-  //       backgroundColor: Colors.blueGrey,
-  //       shape: RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.circular(10),
-  //       ),
-  //       minimumSize: const Size(200, 40),
-  //       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-  //     ),
-  //     onPressed: signOut(context),
-  //     child: const Text('Sign Out'),
-  //   );
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -152,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Padding(
             padding: EdgeInsets.only(right: 20),
             child: Container(
-              height: 35,
+              height: 39,
               width: 35,
               decoration: BoxDecoration(
                 color: Color(0xFF09B198),

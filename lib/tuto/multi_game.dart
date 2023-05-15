@@ -330,23 +330,30 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     _multiGameState = this;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Flutter p2p connection plugin'),
+       iconTheme: const IconThemeData(color: Colors.white, size: 30.0),
+      backgroundColor: Colors.blueGrey.withOpacity(0.2),
       ),
-      body: SingleChildScrollView(
+
+      body: Stack(
+        children:[
+          Image.asset(
+          "assets/ringboxe.jpg",
+          fit: BoxFit.cover,
+          height: double.infinity,
+          width: double.infinity,
+        ),
+      
+      SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-                "IP: ${wifiP2PInfo == null ? "null" : wifiP2PInfo?.groupOwnerAddress}"),
-            wifiP2PInfo != null
-                ? Text(
-                    "connected: ${wifiP2PInfo?.isConnected}, isGroupOwner: ${wifiP2PInfo?.isGroupOwner}, groupFormed: ${wifiP2PInfo?.groupFormed}, groupOwnerAddress: ${wifiP2PInfo?.groupOwnerAddress}, clients: ${wifiP2PInfo?.clients}, areConnected: $areConnected")
-                : const SizedBox.shrink(),
-            const SizedBox(height: 10),
-            const Text("PEERS:"),
+            const SizedBox(height: 100),
+            Text("Joueurs connectés:",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.red[700])),
             SizedBox(
               height: 100,
               width: MediaQuery.of(context).size.width,
@@ -367,17 +374,6 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text("name: ${peers[index].deviceName}"),
-                                  Text(
-                                      "address: ${peers[index].deviceAddress}"),
-                                  Text(
-                                      "isGroupOwner: ${peers[index].isGroupOwner}"),
-                                  Text(
-                                      "isServiceDiscoveryCapable: ${peers[index].isServiceDiscoveryCapable}"),
-                                  Text(
-                                      "primaryDeviceType: ${peers[index].primaryDeviceType}"),
-                                  Text(
-                                      "secondaryDeviceType: ${peers[index].secondaryDeviceType}"),
-                                  Text("status: ${peers[index].status}"),
                                 ],
                               ),
                             ),
@@ -385,10 +381,8 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
                               TextButton(
                                 onPressed: () async {
                                   Navigator.of(context).pop();
-
                                   bool? bo = await _flutterP2pConnectionPlugin
                                       .connect(peers[index].deviceAddress);
-
                                   snack("connected: $bo");
                                 },
                                 child: const Text("connect"),
@@ -402,7 +396,7 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
                       height: 80,
                       width: 80,
                       decoration: BoxDecoration(
-                        color: Colors.grey,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: Center(
@@ -414,7 +408,7 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
                               .first
                               .toUpperCase(),
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontSize: 30,
                           ),
                         ),
@@ -428,6 +422,13 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
                 wifiP2PInfo!.isGroupOwner &&
                 !areConnected)
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.red[700],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                ),
                 onPressed: () async {
                   startSocket();
                   await _flutterP2pConnectionPlugin.stopDiscovery();
@@ -439,6 +440,13 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
                 !areConnected &&
                 wifiP2PInfo?.isConnected == true)
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.red[700],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                ),
                 onPressed: () async {
                   connectToSocket();
                   await _flutterP2pConnectionPlugin.stopDiscovery();
@@ -449,6 +457,13 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
                 wifiP2PInfo!.isGroupOwner &&
                 areConnected)
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.red[700],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                ),
                 onPressed: () async {
                   closeSocketConnection();
                 },
@@ -456,6 +471,13 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
               ),
             if (areConnected && wifiP2PInfo!.isGroupOwner)
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.blue[900],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                ),
                 onPressed: () async {
                   _flutterP2pConnectionPlugin
                       .sendStringToSocket('START POMPES');
@@ -468,6 +490,13 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
               ),
             if (areConnected && wifiP2PInfo!.isGroupOwner)
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.blue[900],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                ),
                 onPressed: () async {
                   _flutterP2pConnectionPlugin
                       .sendStringToSocket('START DESSIN');
@@ -476,10 +505,12 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
                     MaterialPageRoute(builder: (context) => const DessinPage()),
                   );
                 },
-                child: const Text("Jouer Dessin"),
+                child: const Text("Dessin"),
               )
           ],
         ),
+      ),
+      ]
       ),
     );
   }
