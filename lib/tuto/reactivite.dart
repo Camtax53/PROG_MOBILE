@@ -92,8 +92,11 @@ class _ReacitiviteState extends State<ReactivitePage> {
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.only(top: kToolbarHeight + 100),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            padding: const EdgeInsets.only(top: kToolbarHeight + 100),
+            
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal, // Défilement horizontal
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               const SizedBox(height: 230),
               Column(
                 children: [
@@ -276,7 +279,8 @@ class _ReacitiviteState extends State<ReactivitePage> {
                   ),
                 ],
               ),
-            ]),
+            ]
+            ),),
           )
       ),
     );

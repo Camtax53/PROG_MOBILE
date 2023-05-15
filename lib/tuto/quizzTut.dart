@@ -24,7 +24,7 @@ class QuizzPage extends StatefulWidget {
 
 class _QuizzPageState extends State<QuizzPage> {
   int _counter = 0;
-  bool? answer = null;
+  bool? answer;
   bool showButton = false;
   final TextEditingController _controller = TextEditingController();
   late AudioPlayer player;
@@ -99,21 +99,21 @@ class _QuizzPageState extends State<QuizzPage> {
           },
           child: AlertDialog(
             backgroundColor: const Color(0xFFFAF0D5),
-            title: Text(
+            title: const Text(
               "Fin du jeu",
               style: TextStyle(color: Color(0xFF09B198), fontSize: 20),
             ),
             content: Text("Votre score final est de: $_counter"),
             actions: [
               TextButton(
-                child: Text('Retour à l\'accueil',
+                child: const Text('Retour à l\'accueil',
                     style: TextStyle(color: Colors.black, fontSize: 15)),
                 onPressed: () {
                   // Ferme la boîte de dialogue et retourne à la page précédente
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => SoloGame()),
+                        builder: (BuildContext context) => const SoloGame()),
                     (Route<dynamic> route) =>
                         false, // Cette fonction empêche la navigation en arrière
                   );
@@ -132,24 +132,24 @@ class _QuizzPageState extends State<QuizzPage> {
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-          iconTheme: IconThemeData(color: Color(0xFF09B198), size: 30.0),
+          iconTheme: const IconThemeData(color: Color(0xFF09B198), size: 30.0),
           backgroundColor: Colors.blueGrey.withOpacity(0.2),
           elevation: 0,
           actions: [
             Padding(
-              padding: EdgeInsets.only(right: 20, top: 5),
+              padding: const EdgeInsets.only(right: 20, top: 5),
               child: Container(
                 height: 35,
                 width: 110,
                 decoration: BoxDecoration(
-                  color: Color(0xFF09B198),
+                  color: const Color(0xFF09B198),
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: SizedBox(
                   child: Text(
-                    "Score: " + "$_counter",
-                    style: TextStyle(fontSize: 15),
+                    "Score: $_counter",
+                    style: const TextStyle(fontSize: 15),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -181,7 +181,7 @@ class _QuizzPageState extends State<QuizzPage> {
                           const SizedBox(height: 20),
                           SizedBox(
                             child: TextField(
-                              style: TextStyle(fontSize: 15),
+                              style: const TextStyle(fontSize: 15),
                               decoration: const InputDecoration(
                                   hintText: "Entrez votre réponse ici",
                                   filled: true,
@@ -200,7 +200,7 @@ class _QuizzPageState extends State<QuizzPage> {
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,
-                              backgroundColor: Color(0xFF09B198),
+                              backgroundColor: const Color(0xFF09B198),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
