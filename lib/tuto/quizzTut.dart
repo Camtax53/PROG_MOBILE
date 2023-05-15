@@ -5,7 +5,7 @@ import '../Auth/widget_Tree.dart';
 //import 'package:audioplayers/audioplayers.dart';
 
 late List<Map<String, String>> countriesAndCapitals;
-late int nombrequestion ;
+late int nombrequestion;
 
 class QuizzPage extends StatefulWidget {
   @override
@@ -38,7 +38,7 @@ class _QuizzPageState extends State<QuizzPage> {
   @override
   void initState() {
     super.initState();
-   player = AudioPlayer();
+    player = AudioPlayer();
     nombrequestion = 0;
     countriesAndCapitals = [
       {
@@ -53,7 +53,10 @@ class _QuizzPageState extends State<QuizzPage> {
       {
         'Quelle est la longueur d\'un tour de piste extérieur en mètres?': '400'
       },
-      {'Vrai ou Faux: Un athlète doit-il obligatoirement porter des chaussures ?': 'Faux'},
+      {
+        'Vrai ou Faux: Un athlète doit-il obligatoirement porter des chaussures ?':
+            'Faux'
+      },
       {
         'Qui est l\'actuel détenteur du record du monde du décathlon masculin ? (nom de famille)':
             'Mayer'
@@ -70,17 +73,20 @@ class _QuizzPageState extends State<QuizzPage> {
         'Vrai ou Faux: Les juges olympiques doivent tenir compte du vent lorsqu’ils vérifient le résultat du saut en longueur.':
             'Vrai'
       },
-      {'Quelle couleur manque pour compléter le drpaeau des JO: Bleu, rouge, jaune, vert et ...':'Noir'},
-      {'Dans quelle ville seront organisé les JO 2024?':'Paris'}
+      {
+        'Quelle couleur manque pour compléter le drpaeau des JO: Bleu, rouge, jaune, vert et ...':
+            'Noir'
+      },
+      {'Dans quelle ville seront organisé les JO 2024?': 'Paris'}
     ];
     countriesAndCapitals.shuffle();
   }
 
-@override
-void dispose() {
-  player.dispose();
-  super.dispose();
-}
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
+  }
 
   void _showEndGameDialog(BuildContext context) {
     showDialog(
@@ -93,12 +99,15 @@ void dispose() {
           },
           child: AlertDialog(
             backgroundColor: const Color(0xFFFAF0D5),
-            title: Text("Fin du jeu",style: TextStyle(color: Color(0xFF09B198),fontSize: 20),),
+            title: Text(
+              "Fin du jeu",
+              style: TextStyle(color: Color(0xFF09B198), fontSize: 20),
+            ),
             content: Text("Votre score final est de: $_counter"),
-            
             actions: [
               TextButton(
-                child: Text('Retour à l\'accueil',style:TextStyle(color:Colors.black,fontSize: 15)),
+                child: Text('Retour à l\'accueil',
+                    style: TextStyle(color: Colors.black, fontSize: 15)),
                 onPressed: () {
                   // Ferme la boîte de dialogue et retourne à la page précédente
                   Navigator.pushAndRemoveUntil(
@@ -147,8 +156,7 @@ void dispose() {
               ),
             ),
           ]),
-      body: Stack(
-        children: [
+      body: Stack(children: [
         Image.asset(
           "assets/running.jpg",
           fit: BoxFit.cover,
@@ -205,10 +213,12 @@ void dispose() {
                               nombrequestion++;
                               if (_controller.text.toLowerCase() ==
                                       countriesAndCapitals.first.values.first
-                                          .toLowerCase() && answer == null) { //le if permet de voir si c'est la bonne réponse
-                              await player.setAsset('assets/win.mp3');
-                              player.play();
-                                answer = true; 
+                                          .toLowerCase() &&
+                                  answer == null) {
+                                //le if permet de voir si c'est la bonne réponse
+                                await player.setAsset('assets/win.mp3');
+                                player.play();
+                                answer = true;
                                 _controller.clear();
                                 _incrementCounter();
                               } else {
@@ -220,11 +230,13 @@ void dispose() {
                                 });
                               }
                               setState(() {
-                                if (nombrequestion < 5) { //compte 
+                                if (nombrequestion < 5) {
+                                  //compte
                                   countriesAndCapitals.removeAt(0);
                                   showButton = false;
                                   answer = null;
-                                } else if (nombrequestion == 5) {//permet de voir si c'est la fin des 5 question
+                                } else if (nombrequestion == 5) {
+                                  //permet de voir si c'est la fin des 5 question
                                   _showEndGameDialog(context);
                                 }
                               });
