@@ -1,8 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/tuto/multi_game.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 List<bool> endPoint = [];
 double _strokeWidth = 5.0;
@@ -42,31 +40,28 @@ class DrawingPainter extends CustomPainter {
 }
 
 class DessinViewPage extends StatefulWidget {
+  const DessinViewPage({super.key});
+
   @override
   _DessinViewPageState createState() => _DessinViewPageState();
 
+  //recoit le dessin de l'autre joueur
   static void receiveDraw(List<Offset> _points, List<Color> _colors,
       List<double> _strokeWidthList) {
     points = _points;
     colors = _colors;
     strokeWidthList = _strokeWidthList;
-
-    print(points);
-
-    // Effectuez d'autres opérations avec la valeur `_count` ici
   }
 
+  //recoit la liste des mots a deviner
   static void receiveList(List<String> draw) {
     drawList = draw;
-
-    print(drawList);
   }
 }
 
 class _DessinViewPageState extends State<DessinViewPage> {
   late Timer _timer;
   final TextEditingController _controller = TextEditingController();
-  List<String> adrawList = ['caca'];
   int countdown = 11;
   int score = 0;
   int counterMilli = 0;
@@ -93,34 +88,30 @@ class _DessinViewPageState extends State<DessinViewPage> {
         points;
         colors;
         strokeWidthList;
+        //toute les secondes on enleve 1 au compteur
         if (counterMilli == 1000 && countdown > 0) {
           counterMilli = 0;
           countdown--;
         } else {
           counterMilli += 200;
         }
-
-        print(drawList);
       });
     });
   }
 
   void _stopTimer() {
-    if (_timer != null) {
-      _timer.cancel();
-    }
+    _timer.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Score : " + score.toString()), actions: [
+      appBar: AppBar(title: Text("Score : $score"), actions: [
         Text(countdown.toString()),
         IconButton(
-          icon: Icon(Icons.send),
+          icon: const Icon(Icons.send),
           onPressed: () {
             if (_controller.text == drawList.first) {
-              print("Bonne réponse");
               score++;
               points = [];
               colors = [];
@@ -128,15 +119,13 @@ class _DessinViewPageState extends State<DessinViewPage> {
               drawList.removeAt(0);
               MultiGame.sendResult(true);
               _controller.clear();
-            } else {
-              print("Mauvaise réponse");
-            }
+            } else {}
           },
         ),
       ]),
       bottomNavigationBar: BottomAppBar(
         child: TextField(
-          style: TextStyle(fontSize: 15),
+          style: const TextStyle(fontSize: 15),
           decoration: const InputDecoration(
               hintText: "Entrez votre réponse ici",
               filled: true,

@@ -9,6 +9,8 @@ import 'dart:async';
 
 import 'package:flutter_p2p_connection/flutter_p2p_connection.dart';
 
+import '../Multijoueurs/pompesMulti.dart';
+
 int counterA = 0;
 int counterAtoB = 0;
 bool isReceive = false;
@@ -48,20 +50,19 @@ class MultiGame extends StatefulWidget {
   //envoi au joueur qui trouve la liste des dessins
   static Future<void> receiveList(List<String> draw) async {
     drawList = draw;
-    print("receive draw list : $drawList");
     _multiGameState?.sendDrawList();
   }
 
   //envoi au dessinateur si le joueur a trouvé
   static Future<void> sendResult(bool result) async {
     isFind = result;
-    print("receive reponse");
     _multiGameState?.receiveResult();
   }
 
   static _MultiGameState? of(BuildContext context) {
     final state = context.findAncestorStateOfType<_MultiGameState>();
     _multiGameState = state;
+
     return state;
   }
 }
@@ -109,7 +110,6 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
 
     String widthAsString = serializedListWidth.join(",");
     await sendMessageToOther("STROKEWIDTHLIST: $widthAsString");
-    print("caca");
   }
 
   Future receiveResult() async {
@@ -180,7 +180,7 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
         maxConcurrentDownloads: 2,
         deleteOnError: true,
         onConnect: (name, address) {
-          snack("$name connected to socket with address: $address");
+          snack("$name a rejoint la partie !");
           setState(() {
             areConnected = true;
           });
@@ -189,33 +189,25 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
               .sendStringToSocket(isSocketOpen.toString());
         },
         transferUpdate: (transfer) {
-          if (transfer.completed) {
-            snack(
-                "${transfer.failed ? "failed to ${transfer.receiving ? "receive" : "send"}" : transfer.receiving ? "received" : "sent"}: ${transfer.filename}");
-          }
-          print(
-              "ID: ${transfer.id}, FILENAME: ${transfer.filename}, PATH: ${transfer.path}, COUNT: ${transfer.count}, TOTAL: ${transfer.total}, COMPLETED: ${transfer.completed}, FAILED: ${transfer.failed}, RECEIVING: ${transfer.receiving}");
+          if (transfer.completed) {}
         },
         receiveString: (req) async {
           //Pour l'hote de la game
           if (req.startsWith("CounterA:")) {
             counterAtoB = int.parse(req.substring(10));
-            CounterPage.receiveCount(counterAtoB);
+            PompesPage.receiveCount(counterAtoB);
           }
 
           if (req.startsWith("RESULT:")) {
             bool isFindToSend = req.substring(7) == "true";
-            print("isFindToSend: $isFindToSend");
             DessinPage.receiveResult(isFindToSend);
           }
-
-          //snack(req);
         },
       );
       setState(() {
         isSocketOpen = true;
       });
-      snack("open socket: $started");
+      snack("Partie créée !");
     }
   }
 
@@ -228,28 +220,23 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
         deleteOnError: true,
         onConnect: (address) {
           areConnected = true;
-          snack("connected to socket: $address");
+          snack("Partie rejointe !");
         },
         transferUpdate: (transfer) {
           // if (transfer.count == 0) transfer.cancelToken?.cancel();
-          if (transfer.completed) {
-            snack(
-                "${transfer.failed ? "failed to ${transfer.receiving ? "receive" : "send"}" : transfer.receiving ? "received" : "sent"}: ${transfer.filename}");
-          }
-          print(
-              "ID: ${transfer.id}, FILENAME: ${transfer.filename}, PATH: ${transfer.path}, COUNT: ${transfer.count}, TOTAL: ${transfer.total}, COMPLETED: ${transfer.completed}, FAILED: ${transfer.failed}, RECEIVING: ${transfer.receiving}");
+          if (transfer.completed) {}
         },
         receiveString: (req) async {
-          if (req == "START") {
+          if (req == "START POMPES") {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CounterPage()),
+              MaterialPageRoute(builder: (context) => const PompesPage()),
             );
           }
           if (req == "START DESSIN") {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DessinViewPage()),
+              MaterialPageRoute(builder: (context) => const DessinViewPage()),
             );
           }
           if (req == "true") {
@@ -258,7 +245,7 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
           //Envoie le score de l'hote au client
           if (req.startsWith("CounterA:")) {
             counterAtoB = int.parse(req.substring(10));
-            CounterPage.receiveCount(counterAtoB);
+            PompesPage.receiveCount(counterAtoB);
           }
 
           if (req.startsWith('DRAWLIST:')) {
@@ -267,22 +254,18 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
 
             drawList = serializedList;
             DessinViewPage.receiveList(drawList);
-            print("draw $drawList");
           }
 
           if (req.startsWith("POINTS:")) {
             String pointsString = req.substring(8);
             List<String> serializedList = pointsString.split(",");
-
             List<Offset> offsetList = serializedList.map((serializedOffset) {
               List<String> coordinates = serializedOffset.split(":");
               double x = double.parse(coordinates[0]);
               double y = double.parse(coordinates[1]);
               return Offset(x, y);
             }).toList();
-
             points = offsetList;
-            print("point $points");
           }
 
           if (req.startsWith("COLORS:")) {
@@ -294,7 +277,6 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
               return Color(value);
             }).toList();
             colors = colorList;
-            // print("couleurs $colors");
           }
 
           if (req.startsWith("STROKEWIDTHLIST:")) {
@@ -305,11 +287,8 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
               return double.parse(serializedDouble);
             }).toList();
             strokeWidthList = widthList;
-            // print("taille $strokeWidthList");
             DessinViewPage.receiveDraw(points, colors, strokeWidthList);
           }
-
-          //snack(req + " received");
         },
       );
     }
@@ -500,13 +479,14 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
                               ),
                 ),
                 onPressed: () async {
-                  _flutterP2pConnectionPlugin.sendStringToSocket('START');
+                  _flutterP2pConnectionPlugin
+                      .sendStringToSocket('START POMPES');
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CounterPage()),
+                    MaterialPageRoute(builder: (context) => const PompesPage()),
                   );
                 },
-                child: const Text("Jouer"),
+                child: const Text("Pompes"),
               ),
             if (areConnected && wifiP2PInfo!.isGroupOwner)
               ElevatedButton(
@@ -522,7 +502,7 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
                       .sendStringToSocket('START DESSIN');
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => DessinPage()),
+                    MaterialPageRoute(builder: (context) => const DessinPage()),
                   );
                 },
                 child: const Text("Dessin"),
