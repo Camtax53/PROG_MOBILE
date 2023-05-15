@@ -143,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Stack(children: [
         Image.asset(
-          "assets/fondecran.jpg",
+          "assets/image/fondecran.jpg",
           fit: BoxFit.cover,
           height: double.infinity,
           width: double.infinity,

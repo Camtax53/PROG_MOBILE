@@ -64,11 +64,11 @@ class _PompesState extends State<PompesPage> {
           counterMilli += 200;
         }
         if (countdown == 0 && counterA > _counter) {
-          player.setAsset('assets/ko.mp3');
+          player.setAsset('assets/sons/ko.mp3');
           player.play();
           timer.cancel();
         } else if (countdown == 0 && counterA < _counter) {
-          player.setAsset('assets/winBoxe.mp3');
+          player.setAsset('assets/sons/winBoxe.mp3');
           player.play();
           timer.cancel();
         }
@@ -129,7 +129,7 @@ class _PompesState extends State<PompesPage> {
         children: [
           if (countdown > 0)
             Image.asset(
-              "assets/pompes.jpg",
+              "assets/image/pompes.jpg",
               fit: BoxFit.cover,
               height: double.infinity,
               width: double.infinity,
@@ -143,7 +143,7 @@ class _PompesState extends State<PompesPage> {
             ),
           if (countdown == 0 && counterA > _counter)
             Image.asset(
-              "assets/losingboxe.jpg",
+              "assets/image/losingboxe.jpg",
               fit: BoxFit.cover,
               height: double.infinity,
               width: double.infinity,
@@ -183,7 +183,7 @@ class _PompesState extends State<PompesPage> {
             ),
           if (countdown == 0 && counterA < _counter)
             Image.asset(
-              "assets/winningBoxe.jpg",
+              "assets/image/winningBoxe.jpg",
               fit: BoxFit.cover,
               height: double.infinity,
               width: double.infinity,

@@ -158,7 +158,7 @@ class _QuizzPageState extends State<QuizzPage> {
           ]),
       body: Stack(children: [
         Image.asset(
-          "assets/running.jpg",
+          "assets/image/running.jpg",
           fit: BoxFit.cover,
           height: double.infinity,
           width: double.infinity,
@@ -216,13 +216,13 @@ class _QuizzPageState extends State<QuizzPage> {
                                           .toLowerCase() &&
                                   answer == null) {
                                 //le if permet de voir si c'est la bonne réponse
-                                await player.setAsset('assets/win.mp3');
+                                await player.setAsset('assets/sons/win.mp3');
                                 player.play();
                                 answer = true;
                                 _controller.clear();
                                 _incrementCounter();
                               } else {
-                                await player.setAsset('assets/fail.mp3');
+                                await player.setAsset('assets/sons/fail.mp3');
                                 _controller.clear();
                                 player.play();
                                 setState(() {

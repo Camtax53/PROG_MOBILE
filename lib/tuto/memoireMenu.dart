@@ -103,7 +103,7 @@ class _MemoirePageState extends State<MemoirePage> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/danse.jpg"),
+            image: AssetImage("assets/image/danse.jpg"),
             alignment: Alignment.bottomCenter,
             fit: BoxFit.cover,
           ),

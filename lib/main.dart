@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       routes: {
-        '/login': (context) => LoginPage(),
-        '/accueil': (context) => WidgetTree(),
+        '/login': (context) => const LoginPage(),
+        '/accueil': (context) =>const WidgetTree(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

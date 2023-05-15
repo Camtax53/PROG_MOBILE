@@ -74,7 +74,7 @@ class _PompesState extends State<PompesPage> {
       body: Stack(
         children: [
           Image.asset(
-            "assets/pompes.jpg",
+            "assets/image/pompes.jpg",
             fit: BoxFit.cover,
             height: double.infinity,
             width: double.infinity,

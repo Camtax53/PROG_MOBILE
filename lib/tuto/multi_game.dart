@@ -330,7 +330,7 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
       ),
       body: Stack(children: [
         Image.asset(
-          "assets/ringboxe.jpg",
+          "assets/image/ringboxe.jpg",
           fit: BoxFit.cover,
           height: double.infinity,
           width: double.infinity,

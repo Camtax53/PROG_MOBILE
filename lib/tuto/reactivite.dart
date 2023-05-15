@@ -87,7 +87,7 @@ class _ReacitiviteState extends State<ReactivitePage> {
       body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/startingblockf1.png"),
+              image: AssetImage("assets/image/startingblockf1.png"),
               fit: BoxFit.cover,
             ),
           ),
@@ -404,7 +404,7 @@ Widget build(BuildContext context) {
     body: Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/f1fond.jpg'),
+          image: AssetImage('assets/image/f1fond.jpg'),
           fit: BoxFit.cover, // ajuster l'image pour remplir tout l'écran
         ),
       ),
@@ -497,8 +497,8 @@ Widget build(BuildContext context) {
                 onPressed: () => handleButtonPress(index),
                 icon: Image.asset(
                   index == activeButton
-                      ? 'assets/boutongreen.png'
-                      : 'assets/boutonred.png',
+                      ? 'assets/image/boutongreen.png'
+                      : 'assets/image/boutonred.png',
                   height: 90.0,
                   width: 90.0,
                 ),

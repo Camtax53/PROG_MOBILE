@@ -139,7 +139,7 @@ class _MemoireNombresPageState extends State<MemoireNombresPage> {
         body: Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/ballet.png"),
+                image: AssetImage("assets/image/ballet.png"),
                 fit: BoxFit.cover,
               ),
             ),
