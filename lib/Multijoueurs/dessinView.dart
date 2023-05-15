@@ -8,6 +8,7 @@ List<bool> endPoint = [];
 double _strokeWidth = 5.0;
 List<Offset> points = <Offset>[];
 List<Color> colors = <Color>[];
+List<String> drawList = [];
 List<double> strokeWidthList = [];
 
 class DrawingPainter extends CustomPainter {
@@ -54,10 +55,18 @@ class DessinViewPage extends StatefulWidget {
 
     // Effectuez d'autres opérations avec la valeur `_count` ici
   }
+
+  static void receiveList(List<String> draw) {
+    drawList = draw;
+
+    print(drawList);
+  }
 }
 
 class _DessinViewPageState extends State<DessinViewPage> {
   late Timer _timer;
+  final TextEditingController _controller = TextEditingController();
+  List<String> adrawList = ['caca'];
 
   @override
   void initState() {
@@ -78,6 +87,8 @@ class _DessinViewPageState extends State<DessinViewPage> {
         points;
         colors;
         strokeWidthList;
+
+        print(drawList);
       });
     });
   }
@@ -91,8 +102,39 @@ class _DessinViewPageState extends State<DessinViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Drawing Screen'),
+      appBar: AppBar(title: Text("Dessin"), actions: [
+        IconButton(
+          icon: Icon(Icons.send),
+          onPressed: () {
+            if (_controller.text == drawList.first) {
+              print("Bonne réponse");
+              counterA++;
+              points = [];
+              colors = [];
+              strokeWidthList = [];
+              drawList.removeAt(0);
+              MultiGame.sendResult(true);
+              _controller.clear();
+            } else {
+              print("Mauvaise réponse");
+            }
+          },
+        ),
+      ]),
+      bottomNavigationBar: BottomAppBar(
+        child: TextField(
+          style: TextStyle(fontSize: 15),
+          decoration: const InputDecoration(
+              hintText: "Entrez votre réponse ici",
+              filled: true,
+              fillColor: Colors.white,
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(width: 3, color: Color(0xFF09B198)),
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              )),
+          textAlign: TextAlign.center,
+          controller: _controller,
+        ),
       ),
       body: Column(
         children: [

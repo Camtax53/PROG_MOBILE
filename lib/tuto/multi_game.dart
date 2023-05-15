@@ -15,6 +15,8 @@ bool isReceive = false;
 List<Offset> points = <Offset>[];
 List<Color> colors = <Color>[];
 List<double> strokeWidthList = [];
+List<String> drawList = [];
+bool isFind = false;
 _MultiGameState? _multiGameState;
 
 class MultiGame extends StatefulWidget {
@@ -33,18 +35,28 @@ class MultiGame extends StatefulWidget {
     // Effectuez d'autres opérations avec la valeur `_count` ici
   }
 
+  //envoi au joueur qui trouve le dessin
   static Future<void> receiveDraw(List<Offset> _points, List<Color> _colors,
       List<double> _strokeWidthList) async {
     points = _points;
     colors = _colors;
     strokeWidthList = _strokeWidthList;
 
-    // Utilisez la valeur `_count` comme vous le souhaitez
-    print('Received count from CounterPage: ');
-
     _multiGameState?.sendDraw();
+  }
 
-    // Effectuez d'autres opérations avec la valeur `_count` ici
+  //envoi au joueur qui trouve la liste des dessins
+  static Future<void> receiveList(List<String> draw) async {
+    drawList = draw;
+    print("receive draw list : $drawList");
+    _multiGameState?.sendDrawList();
+  }
+
+  //envoi au dessinateur si le joueur a trouvé
+  static Future<void> sendResult(bool result) async {
+    isFind = result;
+    print("receive reponse");
+    _multiGameState?.receiveResult();
   }
 
   static _MultiGameState? of(BuildContext context) {
@@ -66,6 +78,12 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
 
   Future sendScore() async {
     sendMessageToOther("CounterA: $counterA");
+  }
+
+  Future sendDrawList() async {
+    String drawListAsString = drawList.join(",");
+    await sendMessageToOther("DRAWLIST:$drawListAsString");
+    print("send draw lst");
   }
 
   Future sendDraw() async {
@@ -92,6 +110,10 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
     String widthAsString = serializedListWidth.join(",");
     await sendMessageToOther("STROKEWIDTHLIST: $widthAsString");
     print("caca");
+  }
+
+  Future receiveResult() async {
+    await sendMessageToOther("RESULT:$isFind");
   }
 
   @override
@@ -181,6 +203,12 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
             CounterPage.receiveCount(counterAtoB);
           }
 
+          if (req.startsWith("RESULT:")) {
+            bool isFindToSend = req.substring(7) == "true";
+            print("isFindToSend: $isFindToSend");
+            DessinPage.receiveResult(isFindToSend);
+          }
+
           //snack(req);
         },
       );
@@ -231,6 +259,15 @@ class _MultiGameState extends State<MultiGame> with WidgetsBindingObserver {
           if (req.startsWith("CounterA:")) {
             counterAtoB = int.parse(req.substring(10));
             CounterPage.receiveCount(counterAtoB);
+          }
+
+          if (req.startsWith('DRAWLIST:')) {
+            String drawString = req.substring(9);
+            List<String> serializedList = drawString.split(",");
+
+            drawList = serializedList;
+            DessinViewPage.receiveList(drawList);
+            print("draw $drawList");
           }
 
           if (req.startsWith("POINTS:")) {

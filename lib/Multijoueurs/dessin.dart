@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/tuto/multi_game.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 List<bool> endPoint = [];
 double _strokeWidth = 5.0;
+late List<String> toDraw;
+bool resultFromPlayerB = false;
 
 class DrawingPainter extends CustomPainter {
   DrawingPainter(this.points, this.colors, this.strokeWidthList);
@@ -38,12 +42,49 @@ class DrawingPainter extends CustomPainter {
 class DessinPage extends StatefulWidget {
   @override
   _DessinPageState createState() => _DessinPageState();
+
+  static void receiveResult(bool result) {
+    resultFromPlayerB = result;
+    print(resultFromPlayerB);
+  }
 }
 
 class _DessinPageState extends State<DessinPage> {
   List<Offset> _points = <Offset>[];
   List<Color> _colors = <Color>[];
   List<double> strokeWidthList = [];
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+
+    toDraw = ['bite', 'banane', 'coeur'];
+    toDraw.shuffle();
+    MultiGame.receiveList(toDraw);
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
+      setState(() {
+        resultFromPlayerB;
+        if (resultFromPlayerB) {
+          _points.clear();
+          _colors.clear();
+          strokeWidthList.clear();
+          toDraw.removeAt(0);
+          resultFromPlayerB = false;
+        }
+      });
+    });
+  }
+
+  void _stopTimer() {
+    if (_timer != null) {
+      _timer.cancel();
+    }
+  }
 
   void _addPoint(Offset point, Color color, double strokeWidth) {
     setState(() {
@@ -172,7 +213,10 @@ class _DessinPageState extends State<DessinPage> {
       ),
       body: Column(
         children: [
-          const Text('Dessine sur l\'écran avec ton doigt'),
+          if (!resultFromPlayerB)
+            Text(toDraw.first)
+          else
+            Text(toDraw.first + 'Trouvé'),
           Expanded(
             child: GestureDetector(
               //dessine sur l'écran selon les mouvements du doigt
@@ -207,6 +251,7 @@ class _DessinPageState extends State<DessinPage> {
   @override
   void dispose() {
     _strokeWidth = 5.0;
+    _stopTimer();
     super.dispose();
   }
 }
