@@ -40,10 +40,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Widget _title() {
-    return const Text('Firebase Auth');
-  }
-
   Widget _entryField(String title, TextEditingController controller) {
     return TextField(
       keyboardType: TextInputType.emailAddress,
@@ -68,8 +64,8 @@ class _LoginPageState extends State<LoginPage> {
             });
           },
           icon: obscurePassword == true
-              ? Icon(Icons.visibility_off)
-              : Icon(Icons.visibility),
+              ? const Icon(Icons.visibility_off)
+              : const Icon(Icons.visibility),
         ),
       ),
     );
@@ -85,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.white,
-        backgroundColor:  Color(0xFF09B198),
+        backgroundColor: const Color(0xFF09B198),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -115,9 +111,9 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             TextSpan(
               text: isLogin ? ' Inscrivez-vous ici.' : ' Connectez-vous ici.',
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.black,
-                fontSize: 13.0, 
+                fontSize: 13.0,
                 fontWeight: FontWeight.bold,
                 // spécifie la taille de la police
               ),
@@ -153,7 +149,6 @@ class _LoginPageState extends State<LoginPage> {
                 _entryField('Email', _controllerEmail),
                 _entryFieldPassWord('Password', _controllerPassword),
                 _errorMessage(),
-                
                 _submitButton(),
                 _loginOrRegisterButton(),
                 const SizedBox(height: 2000),
@@ -165,93 +160,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-
-
-// class WelcomePage extends StatefulWidget {
-//   const WelcomePage({Key? key}) : super(key: key);
-//   @override
-//   _WelcomePageState createState() => _WelcomePageState();
-// }
-
-// class _WelcomePageState extends State<WelcomePage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: const Color(0xFFF9E0C8),
-//       appBar: AppBar(
-//         backgroundColor: const Color(0xFFF9E0C8),
-//         //peut etre mettre un logo au centre de l'app bar si on trouve mais sinon nsm
-//       ),
-//       body: SingleChildScrollView(
-//         child: Padding(
-//           padding: const EdgeInsets.all(16.0),
-//           child: Column(
-//             children: <Widget>[
-//               const SizedBox(height: 20),
-//               const Text(
-//                 "Bienvenue dans notre jeu WiNsports",
-//                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-//               ),
-//               const SizedBox(height: 150),
-//               ElevatedButton(
-//                 style: ElevatedButton.styleFrom(
-//                   foregroundColor: Colors.green[200],
-//                   backgroundColor: Colors.black,
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(30),
-//                   ),
-//                   minimumSize: const Size(250, 40),
-//                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-//                 ),
-//                 onPressed: () {
-//                   Navigator.pushNamed(context, '/login', arguments: {'isLogin': true});
-//                 },//ajouter une condition,
-//                 child: const Text('Créez un compte'),
-                  
-//               ),
-//               const Row(
-//                 children: <Widget>[
-//                   Expanded(
-//                     child: Divider(
-//                       color: Colors.black,
-//                       thickness: 1,
-//                     ),
-//                   ),
-//                   Padding(
-//                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-//                     child: Text(
-//                       "OU",
-//                       style: TextStyle(fontSize: 10),
-//                     ),
-//                   ),
-//                   Expanded(
-//                     child: Divider(
-//                       color: Colors.black,
-//                       thickness: 1,
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//               ElevatedButton(
-//                 style: ElevatedButton.styleFrom(
-//                   foregroundColor: Colors.green[200],
-//                   backgroundColor: Colors.black,
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(30),
-//                   ),
-//                   minimumSize: const Size(250, 40),
-//                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-//                 ),
-//                 onPressed: () {
-//                   Navigator.pushNamed(context, '/login', arguments: {'isLogin': false});
-//                 },
-//                 child: const Text('Connectez Vous'),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

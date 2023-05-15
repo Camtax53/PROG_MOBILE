@@ -6,6 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/tuto/solo_game.dart';
 
 class MemoireNombresPage extends StatefulWidget {
+  const MemoireNombresPage({super.key});
+
   @override
   _MemoireNombresPageState createState() => _MemoireNombresPageState();
 }
@@ -104,7 +106,7 @@ class _MemoireNombresPageState extends State<MemoireNombresPage> {
     });
   }
 
-    @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -126,7 +128,7 @@ class _MemoireNombresPageState extends State<MemoireNombresPage> {
                 child: SizedBox(
                   child: Text(
                     "Round $round",
-                    style: TextStyle(color: Colors.black, fontSize: 17),
+                    style: const TextStyle(color: Colors.black, fontSize: 17),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -147,13 +149,13 @@ class _MemoireNombresPageState extends State<MemoireNombresPage> {
               child: Column(children: [
                 Visibility(
                   visible: isVisible,
-                  child: Text("$randomNumber",
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                  child: Text(randomNumber,
+                      style: const TextStyle(
+                          fontSize: 30, fontWeight: FontWeight.bold)),
                 ),
                 Visibility(
                   visible: !isVisible,
-                  child: Text("$attente",
+                  child: Text(attente,
                       style: const TextStyle(
                           fontSize: 30, fontWeight: FontWeight.bold)),
                 ),
@@ -200,7 +202,7 @@ class _MemoireNombresPageState extends State<MemoireNombresPage> {
                                       color: Colors.grey),
                                 ],
                               ),
-                              content: Text("Vous avez perdu la partie."),
+                              content: const Text("Vous avez perdu la partie."),
                               backgroundColor: Colors.white,
                               actions: <Widget>[
                                 ButtonBar(
@@ -258,11 +260,11 @@ class _MemoireNombresPageState extends State<MemoireNombresPage> {
                 ),
                 Align(
                   alignment: Alignment.topLeft,
-                  
                   child: ElevatedButton(
                     //indice
-                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFCFD3D6), // couleur de fond personnalisée
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(
+                          0xFFCFD3D6), // couleur de fond personnalisée
                     ),
                     onPressed: () {
                       setState(() {
@@ -283,7 +285,6 @@ class _MemoireNombresPageState extends State<MemoireNombresPage> {
                         Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 8),
-                         
                           child: const Text(
                             'Indice',
                             style: TextStyle(

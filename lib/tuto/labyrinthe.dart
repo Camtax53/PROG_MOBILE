@@ -15,7 +15,7 @@ class LabyrinthePage extends StatefulWidget {
 }
 
 class _LabyrintheState extends State<LabyrinthePage> {
-  Offset _ballPosition = Offset(0.0, 0.0);
+  Offset _ballPosition = const Offset(0.0, 0.0);
   late Offset successPosition;
 
   double sizeBall = 30.0;
@@ -38,7 +38,7 @@ class _LabyrintheState extends State<LabyrinthePage> {
     appBarHeight =
         AppBar().preferredSize.height + MediaQuery.of(context).padding.top;
 
-    if (_ballPosition == Offset(0.0, 0.0)) {
+    if (_ballPosition == const Offset(0.0, 0.0)) {
       _ballPosition = Offset(MediaQuery.of(context).size.width - 350,
           screenHeight / 2 - appBarHeight / 2);
     }
@@ -95,7 +95,7 @@ class _LabyrintheState extends State<LabyrinthePage> {
             left: _ballPosition.dx,
             bottom: _ballPosition.dy,
             child: isVisible
-                ? Container(
+                ? SizedBox(
                     width: 50,
                     height: 50,
                     child: Icon(
@@ -124,8 +124,8 @@ class _LabyrintheState extends State<LabyrinthePage> {
   void initState() {
     super.initState();
     obstacle = [
-      Offset(300, 200),
-      Offset(400, 50),
+      const Offset(300, 200),
+      const Offset(400, 50),
     ];
     _accelerometerSubscription =
         accelerometerEvents.listen((AccelerometerEvent event) {
@@ -141,8 +141,6 @@ class _LabyrintheState extends State<LabyrinthePage> {
     speedDiag = speed / sqrt(2);
     double y = event.x;
     double x = event.y;
-    // print("x : $x");
-    // print("y : $y");
 
     if (!isVisible) {
       _ballPosition = Offset(40, screenHeight / 4);
