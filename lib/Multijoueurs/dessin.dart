@@ -54,6 +54,9 @@ class _DessinPageState extends State<DessinPage> {
   List<Color> _colors = <Color>[];
   List<double> strokeWidthList = [];
   late Timer _timer;
+  int countdown = 10;
+  int score = 0;
+  int counterMilli = 0;
 
   @override
   void initState() {
@@ -72,9 +75,16 @@ class _DessinPageState extends State<DessinPage> {
         if (resultFromPlayerB) {
           _points.clear();
           _colors.clear();
+          score++;
           strokeWidthList.clear();
           toDraw.removeAt(0);
           resultFromPlayerB = false;
+        }
+        if (counterMilli == 1000 && countdown > 0) {
+          counterMilli = 0;
+          countdown--;
+        } else {
+          counterMilli += 200;
         }
       });
     });
@@ -96,7 +106,7 @@ class _DessinPageState extends State<DessinPage> {
   }
 
   void sendCountToOtherFile() {
-    // Appel de la fonction de rappel avec la valeur `_count`
+    // Appel de la fonction de rappel
     MultiGame.receiveDraw(_points, _colors, strokeWidthList);
   }
 
@@ -109,7 +119,8 @@ class _DessinPageState extends State<DessinPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Color(0xFF09B198),
-        title: const Text('Dessin '),
+        title: Text("Score: " + score.toString()),
+        actions: [Text(countdown.toString())],
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
@@ -213,36 +224,67 @@ class _DessinPageState extends State<DessinPage> {
       ),
       body: Column(
         children: [
-          if (!resultFromPlayerB)
+          if (countdown == 0)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+                const Text(
+                  "Fin du jeu!",
+                  style: TextStyle(fontSize: 24),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(
+                        0xFFC21723), // couleur de fond personnalisée
+                  ),
+                  child: const Text('Retour à l\'accueil',
+                      style: TextStyle(color: Colors.white, fontSize: 15)),
+                  onPressed: () {
+                    // Ferme la boîte de dialogue et retourne à la page précédente
+                    Navigator.pop(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => MultiGame()),
+                    );
+                  },
+                ),
+              ],
+            ),
+          if (!resultFromPlayerB && countdown != 0)
             Text(toDraw.first)
-          else
+          else if (resultFromPlayerB && countdown != 0)
             Text(toDraw.first + 'Trouvé'),
-          Expanded(
-            child: GestureDetector(
-              //dessine sur l'écran selon les mouvements du doigt
-              onPanStart: (details) => setState(() {
-                _addPoint(details.localPosition, _currentColor, _strokeWidth);
+          if (countdown > 0)
+            Expanded(
+              child: GestureDetector(
+                //dessine sur l'écran selon les mouvements du doigt
+                onPanStart: (details) => setState(() {
+                  _addPoint(details.localPosition, _currentColor, _strokeWidth);
 
-                endPoint.add(false);
-              }),
-              onPanUpdate: (details) => setState(() {
-                _addPoint(details.localPosition, _currentColor, _strokeWidth);
+                  endPoint.add(false);
+                }),
+                onPanUpdate: (details) => setState(() {
+                  _addPoint(details.localPosition, _currentColor, _strokeWidth);
 
-                endPoint.add(false);
-              }),
-              onPanEnd: (details) => setState(() {
-                _addPoint(Offset.zero, _currentColor, _strokeWidth);
-                sendCountToOtherFile();
-                print(_points);
+                  endPoint.add(false);
+                }),
+                onPanEnd: (details) => setState(() {
+                  _addPoint(Offset.zero, _currentColor, _strokeWidth);
+                  sendCountToOtherFile();
+                  print(_points);
 
-                endPoint.add(true);
-              }),
-              child: CustomPaint(
-                painter: DrawingPainter(_points, _colors, strokeWidthList),
-                size: Size.infinite,
+                  endPoint.add(true);
+                }),
+                child: CustomPaint(
+                  painter: DrawingPainter(_points, _colors, strokeWidthList),
+                  size: Size.infinite,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

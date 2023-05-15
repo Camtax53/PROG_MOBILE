@@ -67,6 +67,9 @@ class _DessinViewPageState extends State<DessinViewPage> {
   late Timer _timer;
   final TextEditingController _controller = TextEditingController();
   List<String> adrawList = ['caca'];
+  int countdown = 11;
+  int score = 0;
+  int counterMilli = 0;
 
   @override
   void initState() {
@@ -77,7 +80,10 @@ class _DessinViewPageState extends State<DessinViewPage> {
   @override
   void dispose() {
     _stopTimer();
-    counterA = 0;
+    points = [];
+    colors = [];
+    strokeWidthList = [];
+    drawList = [];
     super.dispose();
   }
 
@@ -87,6 +93,12 @@ class _DessinViewPageState extends State<DessinViewPage> {
         points;
         colors;
         strokeWidthList;
+        if (counterMilli == 1000 && countdown > 0) {
+          counterMilli = 0;
+          countdown--;
+        } else {
+          counterMilli += 200;
+        }
 
         print(drawList);
       });
@@ -102,13 +114,14 @@ class _DessinViewPageState extends State<DessinViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Dessin"), actions: [
+      appBar: AppBar(title: Text("Score : " + score.toString()), actions: [
+        Text(countdown.toString()),
         IconButton(
           icon: Icon(Icons.send),
           onPressed: () {
             if (_controller.text == drawList.first) {
               print("Bonne réponse");
-              counterA++;
+              score++;
               points = [];
               colors = [];
               strokeWidthList = [];
@@ -138,18 +151,46 @@ class _DessinViewPageState extends State<DessinViewPage> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: CustomPaint(
-              painter: DrawingPainter(
-                points,
-                colors,
-                strokeWidthList,
+          if (countdown > 0)
+            Expanded(
+              child: CustomPaint(
+                painter: DrawingPainter(
+                  points,
+                  colors,
+                  strokeWidthList,
+                ),
               ),
-              child:
-                  Container(), // Remplacez par le contenu que vous souhaitez afficher
             ),
-          ),
-          // Autres éléments de votre interface utilisateur ici
+          if (countdown == 0)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+                const Text(
+                  "Fin du jeu!",
+                  style: TextStyle(fontSize: 24),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(
+                        0xFFC21723), // couleur de fond personnalisée
+                  ),
+                  child: const Text('Retour à l\'accueil',
+                      style: TextStyle(color: Colors.white, fontSize: 15)),
+                  onPressed: () {
+                    // Ferme la boîte de dialogue et retourne à la page précédente
+                    Navigator.pop(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => MultiGame()),
+                    );
+                  },
+                ),
+              ],
+            ),
         ],
       ),
     );
